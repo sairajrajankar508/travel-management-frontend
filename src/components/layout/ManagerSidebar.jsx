@@ -30,8 +30,8 @@ const ManagerSidebar = () => {
   const linkClass = ({ isActive }) =>
     `flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 text-sm font-medium ${
       isActive
-        ? "bg-purple-50 text-purple-700 border border-purple-200"
-        : "text-slate-500 hover:bg-slate-50 hover:text-slate-700 border border-transparent"
+        ? "bg-linear-to-r from-purple-50 to-indigo-50/60 text-purple-700 border border-purple-200/80 shadow-sm shadow-purple-100/50"
+        : "text-slate-500 hover:bg-purple-50/40 hover:text-purple-600 border border-transparent"
     }`;
 
   const items = [
@@ -44,8 +44,8 @@ const ManagerSidebar = () => {
   ];
 
   return (
-    <div className="h-screen flex flex-col bg-white border-r border-slate-200">
-      <div className="px-5 py-5 border-b border-slate-100">
+    <div className="h-screen flex flex-col bg-linear-to-b from-white via-purple-50/[0.04] to-purple-50/[0.12] border-r border-purple-100/50">
+      <div className="px-5 py-5 border-b border-purple-100/40">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-linear-to-br from-purple-600 to-indigo-600 flex items-center justify-center shadow-sm shadow-purple-200">
             <Globe className="text-white" size={18} />
@@ -64,7 +64,7 @@ const ManagerSidebar = () => {
           </NavLink>
         ))}
       </nav>
-      <div className="p-3 border-t border-slate-100">
+      <div className="p-3 border-t border-purple-100/40">
         <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-red-50 hover:text-red-600 transition-all duration-200 border border-transparent">
           <LogOut size={18} /> <span>Logout</span>
         </button>

@@ -31,8 +31,8 @@ const FinanceSidebar = () => {
   const linkClass = ({ isActive }) =>
     `flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 text-sm font-medium ${
       isActive
-        ? "bg-amber-50 text-amber-700 border border-amber-200"
-        : "text-slate-500 hover:bg-slate-50 hover:text-slate-700 border border-transparent"
+        ? "bg-linear-to-r from-amber-50 to-orange-50/60 text-amber-700 border border-amber-200/80 shadow-sm shadow-amber-100/50"
+        : "text-slate-500 hover:bg-amber-50/40 hover:text-amber-600 border border-transparent"
     }`;
 
   const menuItems = [
@@ -46,8 +46,8 @@ const FinanceSidebar = () => {
   ];
 
   return (
-    <div className="h-screen flex flex-col bg-white border-r border-slate-200">
-      <div className="px-5 py-5 border-b border-slate-100">
+    <div className="h-screen flex flex-col bg-linear-to-b from-white via-amber-50/[0.04] to-amber-50/[0.12] border-r border-amber-100/50">
+      <div className="px-5 py-5 border-b border-amber-100/40">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-linear-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-sm shadow-amber-200">
             <Globe className="text-white" size={18} />
@@ -66,7 +66,7 @@ const FinanceSidebar = () => {
           </NavLink>
         ))}
       </nav>
-      <div className="p-3 border-t border-slate-100">
+      <div className="p-3 border-t border-amber-100/40">
         <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-red-50 hover:text-red-600 transition-all duration-200 border border-transparent">
           <LogOut size={18} /> <span>Logout</span>
         </button>

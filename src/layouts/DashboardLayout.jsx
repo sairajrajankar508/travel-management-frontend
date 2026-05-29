@@ -53,13 +53,13 @@ const DashboardLayout = () => {
 
     return (
 
-        <div className="flex h-screen bg-gray-100 overflow-hidden">
+        <div className="flex h-screen bg-linear-to-br from-slate-50 via-white to-blue-50/40 overflow-hidden">
 
             {/* ========================================== */}
             {/* SIDEBAR */}
             {/* ========================================== */}
 
-            <aside className="bg-white shadow-lg border-r border-gray-200 hidden md:block">
+            <aside className="shadow-lg border-r border-blue-100/50 hidden md:block">
 
                 {renderSidebar()}
 
@@ -85,7 +85,7 @@ const DashboardLayout = () => {
                 {/* PAGE CONTENT */}
                 {/* ========================================== */}
 
-                <main className="flex-1 overflow-y-auto p-6 bg-gray-100">
+                <main className="flex-1 overflow-y-auto p-6">
 
                     <Outlet />
 

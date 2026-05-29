@@ -45,7 +45,7 @@ const Navbar = () => {
     };
 
     return (
-        <header className="bg-white border-b border-slate-200 shadow-sm px-6 py-3 flex items-center justify-between">
+        <header className="bg-white/90 backdrop-blur-sm border-b border-blue-100/50 shadow-sm px-6 py-3 flex items-center justify-between">
             {/* LEFT */}
             <div>
                 <h1 className="text-lg font-bold text-slate-800">Corporate Travel Hub</h1>
