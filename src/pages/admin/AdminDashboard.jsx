@@ -30,17 +30,16 @@ const AdminDashboard = () => {
 
   const recentRequests = allRequests.slice(-5).reverse();
 
-  // Monthly bar chart data
-  const monthlyMap = {};
+  // Department-wise requests
+  const deptMap = {};
   allRequests.forEach((r) => {
-    if (r.createdAt) {
-      const m = new Date(r.createdAt).toLocaleString("default", { month: "short", year: "2-digit" });
-      if (!monthlyMap[m]) monthlyMap[m] = { name: m, requests: 0, budget: 0 };
-      monthlyMap[m].requests++;
-      monthlyMap[m].budget += r.budget || 0;
-    }
+    const dept = r.user?.department || r.department || "Unknown";
+    if (!deptMap[dept]) deptMap[dept] = 0;
+    deptMap[dept]++;
   });
-  const monthlyData = Object.values(monthlyMap).slice(-12);
+  const deptData = Object.entries(deptMap)
+    .map(([name, value]) => ({ name, value }))
+    .sort((a, b) => b.value - a.value);
 
   // Pie chart data by status
   const statusCount = {};
@@ -92,20 +91,20 @@ const AdminDashboard = () => {
 
         {/* CHARTS ROW */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {/* BAR CHART — Monthly Requests */}
+          {/* BAR CHART — Department-wise Requests */}
           <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
             <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-              <TrendingUp size={20} /> Monthly Requests
+              <Users size={20} /> Department Activity
             </h2>
-            {monthlyData.length === 0 ? (
+            {deptData.length === 0 ? (
               <p className="text-slate-400 text-center py-12">No data yet</p>
             ) : (
               <ResponsiveContainer width="100%" height={280}>
-                <BarChart data={monthlyData}>
-                  <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-                  <YAxis tick={{ fontSize: 12 }} />
-                  <Tooltip />
-                  <Bar dataKey="requests" fill="#3b82f6" radius={[6, 6, 0, 0]} name="Requests" />
+                <BarChart data={deptData} layout="vertical" margin={{ left: 100, right: 20 }}>
+                  <XAxis type="number" tick={{ fontSize: 12 }} />
+                  <YAxis type="category" dataKey="name" tick={{ fontSize: 12 }} width={90} />
+                  <Tooltip formatter={(v) => [`${v} requests`, "Total"]} />
+                  <Bar dataKey="value" fill="#3b82f6" radius={[0, 6, 6, 0]} name="Requests" />
                 </BarChart>
               </ResponsiveContainer>
             )}
@@ -147,7 +146,6 @@ const AdminDashboard = () => {
                     <th className="pb-3 pr-4">Destination</th>
                     <th className="pb-3 pr-4">Budget</th>
                     <th className="pb-3 pr-4">Status</th>
-                    <th className="pb-3 pr-4">Date</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -160,9 +158,6 @@ const AdminDashboard = () => {
                         <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${statusColor[r.status] || "bg-slate-100 text-slate-700"}`}>
                           {r.status?.replace(/_/g, " ")}
                         </span>
-                      </td>
-                      <td className="py-3 pr-4 text-sm text-slate-400">
-                        {r.createdAt ? new Date(r.createdAt).toLocaleDateString() : "—"}
                       </td>
                     </tr>
                   ))}
