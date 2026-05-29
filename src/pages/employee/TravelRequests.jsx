@@ -212,7 +212,6 @@ const TravelRequests = () => {
                   <div><span className="text-slate-500">Transport:</span><p className="font-medium text-slate-800">{selectedReq.transportMode || "—"}</p></div>
                   <div><span className="text-slate-500">Accommodation:</span><p className="font-medium text-slate-800 wrap-break-word">{selectedReq.accommodation || "—"}</p></div>
                   <div><span className="text-slate-500">Purpose:</span><p className="font-medium text-slate-800 wrap-break-word">{selectedReq.purpose || "—"}</p></div>
-                  <div><span className="text-slate-500">Priority:</span><p className="font-medium text-slate-800">{selectedReq.priority || "—"}</p></div>
                 </div>
                 {selectedReq.description && (
                   <div><span className="text-slate-500">Description:</span><p className="font-medium text-slate-800 mt-0.5 wrap-break-word">{selectedReq.description}</p></div>

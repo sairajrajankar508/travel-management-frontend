@@ -135,7 +135,6 @@ const PendingApprovals = () => {
                   <div><span className="text-slate-500">Budget:</span><p className="font-medium text-slate-800">₹{selectedReq.budget?.toLocaleString() || "0"}</p></div>
                   <div><span className="text-slate-500">Status:</span><p className="font-medium text-slate-800">{selectedReq.status?.replace(/_/g, " ")}</p></div>
                   <div><span className="text-slate-500">Purpose:</span><p className="font-medium text-slate-800">{selectedReq.purpose || "—"}</p></div>
-                  <div><span className="text-slate-500">Priority:</span><p className="font-medium text-slate-800">{selectedReq.priority || "—"}</p></div>
                   <div><span className="text-slate-500">Start Date:</span><p className="font-medium text-slate-800">{selectedReq.startDate ? new Date(selectedReq.startDate).toLocaleDateString() : "—"}</p></div>
                   <div><span className="text-slate-500">End Date:</span><p className="font-medium text-slate-800">{selectedReq.endDate ? new Date(selectedReq.endDate).toLocaleDateString() : "—"}</p></div>
                   <div><span className="text-slate-500">Transport:</span><p className="font-medium text-slate-800">{selectedReq.transportMode || "—"}</p></div>
