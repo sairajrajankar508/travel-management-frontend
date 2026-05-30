@@ -1,70 +1,106 @@
 import { useState, useEffect } from "react";
 import apiClient from "../../services/apiClient";
-import { LayoutDashboard, ClipboardList, Clock, CheckCircle, DollarSign } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import {
+  LayoutDashboard, ClipboardList, Clock, CheckCircle, DollarSign,
+  ChevronRight, History, Users, Plane, XCircle, AlertTriangle, Eye,
+} from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 
-const PIE_COLORS = ["#22c55e", "#f59e0b", "#ef4444", "#3b82f6", "#a855f7"];
+const PIE_COLORS = ["#3b82f6", "#22c55e", "#f59e0b", "#ef4444", "#a855f7", "#64748b", "#14b8a6"];
+
+const STATUS_BADGE = {
+  DRAFT: "bg-gray-100 text-gray-700",
+  SUBMITTED: "bg-blue-100 text-blue-700",
+  POLICY_VALIDATION: "bg-orange-100 text-orange-700",
+  MANAGER_REVIEW: "bg-amber-100 text-amber-700",
+  MANAGER_APPROVED: "bg-teal-100 text-teal-700",
+  FINANCE_REVIEW: "bg-purple-100 text-purple-700",
+  FINANCE_APPROVED: "bg-green-100 text-green-700",
+  ITINERARY_CREATED: "bg-indigo-100 text-indigo-700",
+  TRAVEL_IN_PROGRESS: "bg-cyan-100 text-cyan-700",
+  EXPENSE_SUBMITTED: "bg-pink-100 text-pink-700",
+  EXPENSE_REVIEW: "bg-rose-100 text-rose-700",
+  REIMBURSED: "bg-emerald-100 text-emerald-700",
+  COMPLETED: "bg-green-100 text-green-700",
+  CANCELLED: "bg-slate-100 text-slate-700",
+  REJECTED: "bg-red-100 text-red-700",
+};
 
 const ManagerDashboard = () => {
-  const [data, setData] = useState(null);
-  const [requests, setRequests] = useState([]);
+  const navigate = useNavigate();
+  const [stats, setStats] = useState(null);
+  const [pending, setPending] = useState([]);
+  const [teamRequests, setTeamRequests] = useState([]);
+  const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showDetails, setShowDetails] = useState(null);
 
-  const fetchData = () => {
+  useEffect(() => {
     Promise.all([
       apiClient.get("/manager/dashboard"),
       apiClient.get("/manager/requests"),
-    ]).then(([dashRes, reqRes]) => {
-      setData(dashRes.data);
-      setRequests(reqRes.data || []);
-    }).catch((err) => {
-      console.error(err);
-    }).finally(() => {
-      setLoading(false);
-    });
-  };
+      apiClient.get("/manager/team-activity"),
+      apiClient.get("/manager/history"),
+    ]).then(([dash, req, team, hist]) => {
+      setStats(dash.data);
+      setPending(req.data || []);
+      setTeamRequests(team.data || []);
+      setHistory(hist.data || []);
+    }).catch(() => {}).finally(() => setLoading(false));
+  }, []);
 
-  useEffect(() => { fetchData(); }, []);
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-100 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-purple-600" />
+      </div>
+    );
+  }
 
-  if (loading) return <div className="min-h-screen bg-slate-100 flex items-center justify-center"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-purple-600" /></div>;
+  const last5 = (arr) => arr?.slice(-5).reverse() || [];
 
-  // Monthly bar data from all requests for chart (use manager history or team-activity for full data)
+  // Charts data from team requests
   const monthlyMap = {};
-  requests.forEach((r) => {
+  teamRequests.forEach((r) => {
     if (r.createdAt) {
       const m = new Date(r.createdAt).toLocaleString("default", { month: "short", year: "2-digit" });
       if (!monthlyMap[m]) monthlyMap[m] = { name: m, requests: 0 };
       monthlyMap[m].requests++;
     }
   });
-  const monthlyData = Object.values(monthlyMap).slice(-12);
+  const monthlyData = Object.values(monthlyMap).slice(-8);
 
-  // Status pie
   const statusCount = {};
-  requests.forEach((r) => {
+  teamRequests.forEach((r) => {
     const s = r.status || "UNKNOWN";
     statusCount[s] = (statusCount[s] || 0) + 1;
   });
-  const pieData = Object.entries(statusCount).map(([name, value]) => ({ name: name.replace(/_/g, " "), value }));
+  const pieData = Object.entries(statusCount).map(([name, value]) => ({
+    name: name.replace(/_/g, " "),
+    value,
+  }));
 
   const cards = [
-    { label: "Total Team Requests", value: data?.totalRequests || 0, icon: ClipboardList, color: "bg-blue-500" },
-    { label: "Pending Approval", value: data?.pendingRequests || 0, icon: Clock, color: "bg-amber-500" },
-    { label: "Approved", value: data?.approvedRequests || 0, icon: CheckCircle, color: "bg-green-500" },
-    { label: "Total Budget", value: `₹${(data?.totalBudget || 0).toLocaleString()}`, icon: DollarSign, color: "bg-purple-500" },
+    { label: "Total Requests", value: stats?.totalRequests || 0, icon: ClipboardList, color: "bg-purple-500", path: "/manager/team-requests" },
+    { label: "Pending Approval", value: stats?.pendingRequests || 0, icon: Clock, color: "bg-amber-500", path: "/manager/pending-approvals" },
+    { label: "Approved", value: stats?.approvedRequests || 0, icon: CheckCircle, color: "bg-green-500", path: "/manager/team-history" },
+    { label: "Total Budget", value: `₹${(stats?.totalBudget || 0).toLocaleString()}`, icon: DollarSign, color: "bg-blue-500", path: "/manager/reports" },
   ];
 
   return (
     <div className="min-h-screen bg-slate-100 p-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex items-center gap-3 mb-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* HEADER */}
+        <div className="flex items-center gap-3">
           <LayoutDashboard className="text-3xl text-slate-700" />
           <h1 className="text-3xl font-bold text-slate-800">Manager Dashboard</h1>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+        {/* STAT CARDS */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {cards.map((c) => (
-            <div key={c.label} className="bg-white rounded-2xl shadow-md border border-slate-200 p-5 flex items-center gap-4">
+            <div key={c.label} onClick={() => navigate(c.path)} className="bg-white rounded-2xl shadow-md border border-slate-200 p-5 flex items-center gap-4 cursor-pointer hover:shadow-lg hover:border-purple-200 transition">
               <div className={`${c.color} p-3 rounded-xl text-white`}><c.icon size={24} /></div>
               <div>
                 <p className="text-sm text-slate-500">{c.label}</p>
@@ -75,11 +111,13 @@ const ManagerDashboard = () => {
         </div>
 
         {/* CHARTS */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
             <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><ClipboardList size={20} /> Monthly Requests</h2>
-            {monthlyData.length === 0 ? <p className="text-slate-400 text-center py-12">No data</p> : (
-              <ResponsiveContainer width="100%" height={260}>
+            {monthlyData.length === 0 ? (
+              <p className="text-slate-400 text-center py-12 text-sm">No data</p>
+            ) : (
+              <ResponsiveContainer width="100%" height={240}>
                 <BarChart data={monthlyData}>
                   <XAxis dataKey="name" tick={{ fontSize: 12 }} />
                   <YAxis tick={{ fontSize: 12 }} />
@@ -90,11 +128,13 @@ const ManagerDashboard = () => {
             )}
           </div>
           <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
-            <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><DollarSign size={20} /> Request Status</h2>
-            {pieData.length === 0 ? <p className="text-slate-400 text-center py-12">No data</p> : (
-              <ResponsiveContainer width="100%" height={260}>
+            <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><Users size={20} /> Status Breakdown</h2>
+            {pieData.length === 0 ? (
+              <p className="text-slate-400 text-center py-12 text-sm">No data</p>
+            ) : (
+              <ResponsiveContainer width="100%" height={240}>
                 <PieChart>
-                  <Pie data={pieData} cx="50%" cy="50%" outerRadius={90} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}>
+                  <Pie data={pieData} cx="50%" cy="50%" outerRadius={85} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}>
                     {pieData.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
                   </Pie>
                   <Tooltip />
@@ -104,11 +144,52 @@ const ManagerDashboard = () => {
           </div>
         </div>
 
-        {/* PENDING REQUESTS PREVIEW */}
+        {/* PENDING APPROVALS - Last 5 */}
         <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
-          <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><Clock size={20} /> Pending Requests</h2>
-          {requests.length === 0 ? (
-            <p className="text-slate-400 text-center py-8">No pending requests</p>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2"><Clock size={20} /> Pending Approvals</h2>
+            <button onClick={() => navigate("/manager/pending-approvals")} className="text-xs text-purple-600 hover:text-purple-700 flex items-center gap-0.5 font-medium">View All <ChevronRight size={13} /></button>
+          </div>
+          {last5(pending).length === 0 ? (
+            <p className="text-slate-400 text-center py-8 text-sm">No pending requests</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead>
+                  <tr className="border-b border-slate-200 text-slate-500 text-xs uppercase tracking-wider">
+                    <th className="pb-3 pr-4">Employee</th>
+                    <th className="pb-3 pr-4">Destination</th>
+                    <th className="pb-3 pr-4">Budget</th>
+                    <th className="pb-3 pr-4">Purpose</th>
+                    <th className="pb-3 pr-4">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {last5(pending).map((r) => (
+                    <tr key={r.id} className="border-b border-slate-100 hover:bg-slate-50 transition">
+                      <td className="py-3 pr-4 font-medium text-slate-800">{r.employeeName || r.user?.name || "—"}</td>
+                      <td className="py-3 pr-4 text-slate-600">{r.destination || "—"}</td>
+                      <td className="py-3 pr-4 font-semibold text-slate-700">₹{r.budget?.toLocaleString() || "0"}</td>
+                      <td className="py-3 pr-4 text-sm text-slate-500">{r.purpose || "—"}</td>
+                      <td className="py-3 pr-4">
+                        <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${STATUS_BADGE[r.status] || "bg-slate-100 text-slate-700"}`}>{r.status?.replace(/_/g, " ")}</span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+        {/* TEAM REQUESTS - Last 5 */}
+        <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2"><Users size={20} /> Team Requests</h2>
+            <button onClick={() => navigate("/manager/team-requests")} className="text-xs text-purple-600 hover:text-purple-700 flex items-center gap-0.5 font-medium">View All <ChevronRight size={13} /></button>
+          </div>
+          {last5(teamRequests).length === 0 ? (
+            <p className="text-slate-400 text-center py-8 text-sm">No team requests</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left">
@@ -118,17 +199,19 @@ const ManagerDashboard = () => {
                     <th className="pb-3 pr-4">Destination</th>
                     <th className="pb-3 pr-4">Budget</th>
                     <th className="pb-3 pr-4">Status</th>
+                    <th className="pb-3 pr-4">Date</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {requests.slice(0, 5).map((r) => (
+                  {last5(teamRequests).map((r) => (
                     <tr key={r.id} className="border-b border-slate-100 hover:bg-slate-50 transition">
-                      <td className="py-3 pr-4 font-medium text-slate-800">{r.employeeName || r.user?.name || "N/A"}</td>
+                      <td className="py-3 pr-4 font-medium text-slate-800">{r.employeeName || r.user?.name || "—"}</td>
                       <td className="py-3 pr-4 text-slate-600">{r.destination || "—"}</td>
                       <td className="py-3 pr-4 font-semibold text-slate-700">₹{r.budget?.toLocaleString() || "0"}</td>
                       <td className="py-3 pr-4">
-                        <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-700">{r.status?.replace(/_/g, " ")}</span>
+                        <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${STATUS_BADGE[r.status] || "bg-slate-100 text-slate-700"}`}>{r.status?.replace(/_/g, " ")}</span>
                       </td>
+                      <td className="py-3 pr-4 text-sm text-slate-400">{r.createdAt ? new Date(r.createdAt).toLocaleDateString() : "—"}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -136,6 +219,45 @@ const ManagerDashboard = () => {
             </div>
           )}
         </div>
+
+        {/* TRAVEL HISTORY - Last 5 */}
+        <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2"><History size={20} /> Travel History</h2>
+            <button onClick={() => navigate("/manager/team-history")} className="text-xs text-purple-600 hover:text-purple-700 flex items-center gap-0.5 font-medium">View All <ChevronRight size={13} /></button>
+          </div>
+          {last5(history).length === 0 ? (
+            <p className="text-slate-400 text-center py-8 text-sm">No history yet</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead>
+                  <tr className="border-b border-slate-200 text-slate-500 text-xs uppercase tracking-wider">
+                    <th className="pb-3 pr-4">Employee</th>
+                    <th className="pb-3 pr-4">Destination</th>
+                    <th className="pb-3 pr-4">Budget</th>
+                    <th className="pb-3 pr-4">Status</th>
+                    <th className="pb-3 pr-4">Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {last5(history).map((r) => (
+                    <tr key={r.id} className="border-b border-slate-100 hover:bg-slate-50 transition">
+                      <td className="py-3 pr-4 font-medium text-slate-800">{r.employeeName || r.user?.name || "—"}</td>
+                      <td className="py-3 pr-4 text-slate-600">{r.destination || "—"}</td>
+                      <td className="py-3 pr-4 font-semibold text-slate-700">₹{r.budget?.toLocaleString() || "0"}</td>
+                      <td className="py-3 pr-4">
+                        <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${STATUS_BADGE[r.status] || "bg-slate-100 text-slate-700"}`}>{r.status?.replace(/_/g, " ")}</span>
+                      </td>
+                      <td className="py-3 pr-4 text-sm text-slate-400">{r.createdAt ? new Date(r.createdAt).toLocaleDateString() : "—"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
       </div>
     </div>
   );

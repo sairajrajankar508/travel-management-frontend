@@ -26,7 +26,7 @@ const TeamHistory = () => {
   const filtered = requests.filter((r) => {
     const q = search.toLowerCase();
     return (r.user?.name || "")?.toLowerCase().includes(q) || (r.destination || "")?.toLowerCase().includes(q);
-  });
+  }).sort((a, b) => (b.id || 0) - (a.id || 0));
 
   // Monthly bar chart
   const monthlyMap = {};
@@ -128,7 +128,7 @@ const TeamHistory = () => {
                 </tr>
               </thead>
               <tbody>
-                {filtered.slice().reverse().map((r) => (
+                {filtered.map((r) => (
                   <tr key={r.id} className="border-b border-slate-100 hover:bg-slate-50 transition">
                     <td className="py-3.5 pr-4 font-medium text-slate-800">{r.user?.name || "N/A"}</td>
                     <td className="py-3.5 pr-4 text-slate-600">{r.destination || "—"}</td>

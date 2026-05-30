@@ -106,7 +106,7 @@ const Expenses = () => {
                 </tr>
               </thead>
               <tbody>
-                {expenses.map((e) => (
+                {[...expenses].sort((a, b) => (b.id || 0) - (a.id || 0)).map((e) => (
                   <tr key={e.id} className="border-b border-slate-100 hover:bg-slate-50 transition">
                     <td className="py-3.5 pr-4 font-medium text-slate-800">{e.title}</td>
                     <td className="py-3.5 pr-4 text-slate-500 text-sm">{e.category || "—"}</td>

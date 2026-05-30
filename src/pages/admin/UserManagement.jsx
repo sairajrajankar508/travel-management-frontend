@@ -31,7 +31,7 @@ const UserManagement = () => {
     const matchSearch = u.name?.toLowerCase().includes(search.toLowerCase()) || u.email?.toLowerCase().includes(search.toLowerCase());
     const matchRole = !roleFilter || u.role === roleFilter;
     return matchSearch && matchRole;
-  });
+  }).sort((a, b) => (b.id || 0) - (a.id || 0));
 
   const openAdd = () => { setEditUser(null); setForm({ name: "", email: "", password: "", role: "EMPLOYEE", department: "" }); setShowModal(true); };
 

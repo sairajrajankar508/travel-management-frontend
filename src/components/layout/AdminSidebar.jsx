@@ -1,8 +1,8 @@
 import { useState } from "react";
-import toast from "react-hot-toast";
-import { NavLink, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { logout } from "../../features/auth/authSlice";
+import "react-hot-toast";
+import { NavLink } from "react-router-dom";
+
+
 import {
   LayoutDashboard,
   Users,
@@ -13,7 +13,6 @@ import {
   FileBarChart2,
   Clock,
   UserCircle,
-  LogOut,
   ChevronDown,
   ChevronRight,
   Globe,
@@ -21,38 +20,31 @@ import {
 
 const AdminSidebar = () => {
   const [userOpen, setUserOpen] = useState(true);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  
+  
 
-  const handleLogout = () => {
-    toast.success("Logged out successfully", { icon: "⚠️", duration: 2000 });
-    setTimeout(() => {
-        dispatch(logout());
-        localStorage.clear();
-        navigate("/login");
-    }, 600);
-  };
+  
 
   const linkClass = ({ isActive }) =>
     `flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 text-sm font-medium ${
       isActive
-        ? "bg-linear-to-r from-blue-50 to-indigo-50/60 text-blue-700 border border-blue-200/80 shadow-sm shadow-blue-100/50"
-        : "text-slate-500 hover:bg-blue-50/40 hover:text-blue-600 border border-transparent"
+        ? "bg-red-100 text-red-700 border border-red-200/80 shadow-sm"
+        : "text-slate-500 hover:bg-red-50 hover:text-red-600 border border-transparent"
     }`;
 
   const subLinkClass = ({ isActive }) =>
     `flex items-center gap-3 px-4 py-2 rounded-lg transition-all duration-200 text-sm ${
       isActive
-        ? "bg-blue-50/60 text-blue-600"
-        : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"
+        ? "bg-red-100 text-red-700"
+        : "text-slate-400 hover:bg-red-50 hover:text-red-600"
     }`;
 
   return (
-    <div className="h-screen flex flex-col bg-linear-to-b from-white via-blue-50/[0.04] to-blue-50/[0.12] border-r border-blue-100/50">
-      {/* BRAND — matching login page style */}
-      <div className="px-5 py-5 border-b border-blue-100/40">
+    <div className="h-screen flex flex-col bg-red-50 border-r border-red-100">
+      {/* BRAND */}
+      <div className="px-5 py-5 border-b border-red-100">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-linear-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-sm shadow-blue-200">
+          <div className="w-9 h-9 rounded-xl bg-linear-to-br from-red-500 to-red-600 flex items-center justify-center shadow-sm shadow-red-200">
             <Globe className="text-white" size={18} />
           </div>
           <div>
@@ -73,7 +65,7 @@ const AdminSidebar = () => {
         <div>
           <button
             onClick={() => setUserOpen(!userOpen)}
-            className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-medium text-slate-500 hover:bg-slate-50 hover:text-slate-700 transition-all duration-200 border border-transparent"
+            className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-all duration-200 border border-transparent"
           >
             <span className="flex items-center gap-3">
               <Users size={18} />
@@ -139,16 +131,7 @@ const AdminSidebar = () => {
         </NavLink>
       </nav>
 
-      {/* LOGOUT */}
-      <div className="p-3 border-t border-blue-100/40">
-        <button
-          onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-red-50 hover:text-red-600 transition-all duration-200 border border-transparent"
-        >
-          <LogOut size={18} />
-          <span>Logout</span>
-        </button>
-      </div>
+      
     </div>
   );
 };

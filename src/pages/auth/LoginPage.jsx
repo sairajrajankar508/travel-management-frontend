@@ -42,19 +42,19 @@ const LoginPage = () => {
         <div className="min-h-screen bg-white flex">
 
             {/* ─── LEFT: 60% — Brand / Info ─── */}
-            <div className="hidden lg:flex w-[60%] bg-linear-to-br from-blue-50 via-white to-indigo-50 relative overflow-hidden flex-col justify-center px-16 py-12">
+            <div className="hidden lg:flex w-[60%] bg-linear-to-br from-slate-50 via-white to-slate-100 relative overflow-hidden flex-col justify-center px-16 py-12">
 
                 {/* subtle globe dots */}
                 <div className="absolute inset-0 opacity-30"
                     style={{
-                        backgroundImage: "radial-gradient(circle at 20px 20px, rgba(59,130,246,0.08) 1px, transparent 1px)",
+                        backgroundImage: "radial-gradient(circle at 20px 20px, rgba(100,116,139,0.08) 1px, transparent 1px)",
                         backgroundSize: "40px 40px"
                     }}
                 />
 
                 {/* decorative circles */}
-                <div className="absolute -top-32 -right-32 w-80 h-80 rounded-full bg-blue-100/50" />
-                <div className="absolute -bottom-20 -left-20 w-60 h-60 rounded-full bg-indigo-100/40" />
+                <div className="absolute -top-32 -right-32 w-80 h-80 rounded-full bg-slate-100/50" />
+                <div className="absolute -bottom-20 -left-20 w-60 h-60 rounded-full bg-slate-200/40" />
 
                 <div className="relative z-10 max-w-lg">
 

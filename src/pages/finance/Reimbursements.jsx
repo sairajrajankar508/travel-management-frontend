@@ -36,7 +36,7 @@ const Reimbursements = () => {
     const reimbursed = expenses.filter((e) => e.status === "REIMBURSED");
     const rejected = expenses.filter((e) => e.status === "REJECTED");
 
-    const displayExpenses = activeTab === "pending" ? approved : activeTab === "reimbursed" ? reimbursed : rejected;
+    const displayExpenses = (activeTab === "pending" ? approved : activeTab === "reimbursed" ? reimbursed : rejected).sort((a, b) => (b.id || 0) - (a.id || 0));
 
     const totalApproved = approved.reduce((s, e) => s + e.amount, 0);
     const totalReimbursed = reimbursed.reduce((s, e) => s + e.amount, 0);

@@ -42,7 +42,7 @@ const Reimbursements = () => {
     if (tab === "reimbursed") return matchSearch && e.status === "REIMBURSED";
     if (tab === "rejected") return matchSearch && e.status === "REJECTED";
     return matchSearch;
-  });
+  }).sort((a, b) => (b.id || 0) - (a.id || 0));
 
   // Charts
   const statusCount = {};

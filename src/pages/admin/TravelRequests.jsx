@@ -53,7 +53,7 @@ const TravelRequests = () => {
     const matchSearch = r.user?.name?.toLowerCase().includes(q) || r.destination?.toLowerCase().includes(q) || r.purpose?.toLowerCase().includes(q);
     const matchStatus = !statusFilter || r.status === statusFilter;
     return matchSearch && matchStatus;
-  });
+  }).sort((a, b) => (b.id || 0) - (a.id || 0));
 
   const handleOverride = (id) => {
     if (!overrideStatus) return toast.error("Select a status");

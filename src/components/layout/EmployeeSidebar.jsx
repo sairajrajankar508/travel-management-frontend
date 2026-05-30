@@ -31,8 +31,8 @@ const EmployeeSidebar = () => {
   const linkClass = ({ isActive }) =>
     `flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 text-sm font-medium ${
       isActive
-        ? "bg-linear-to-r from-blue-50 to-indigo-50/60 text-blue-700 border border-blue-200/80 shadow-sm shadow-blue-100/50"
-        : "text-slate-500 hover:bg-blue-50/40 hover:text-blue-600 border border-transparent"
+        ? "bg-blue-100 text-blue-700 border border-blue-200/80 shadow-sm"
+        : "text-slate-500 hover:bg-blue-50 hover:text-blue-600 border border-transparent"
     }`;
 
   const menuItems = [
@@ -46,10 +46,10 @@ const EmployeeSidebar = () => {
   ];
 
   return (
-    <div className="h-screen flex flex-col bg-linear-to-b from-white via-blue-50/[0.04] to-blue-50/[0.12] border-r border-blue-100/50">
-      <div className="px-5 py-5 border-b border-blue-100/40">
+    <div className="h-screen flex flex-col bg-blue-50 border-r border-blue-100">
+      <div className="px-5 py-5 border-b border-blue-100">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-linear-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-sm shadow-blue-200">
+          <div className="w-9 h-9 rounded-xl bg-linear-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-sm shadow-blue-200">
             <Globe className="text-white" size={18} />
           </div>
           <div>
@@ -66,7 +66,7 @@ const EmployeeSidebar = () => {
           </NavLink>
         ))}
       </nav>
-      <div className="p-3 border-t border-blue-100/40">
+      <div className="p-3 border-t border-blue-100">
         <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-red-50 hover:text-red-600 transition-all duration-200 border border-transparent">
           <LogOut size={18} /> <span>Logout</span>
         </button>

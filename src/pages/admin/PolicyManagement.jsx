@@ -8,11 +8,11 @@ const PolicyManagement = () => {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editPol, setEditPol] = useState(null);
-  const [form, setForm] = useState({ policyName: "", description: "", maxBudget: "", allowedClass: "Economy", maxTripDays: "", perDayAllowance: "", hotelLimitPerNight: "" });
+  const [form, setForm] = useState({ policyName: "", description: "", maxBudget: "", allowedClass: "Economy", maxTripDays: "", perDiemAllowance: "", hotelLimitPerNight: "" });
 
   const fetchPolicies = () => {
     apiClient.get("/admin/policy").then((res) => {
-      setPolicies(res.data || []);
+      setPolicies((res.data || []).sort((a, b) => (b.id || 0) - (a.id || 0)));
     }).catch(() => {
       toast.error("Failed to load policies");
     }).finally(() => {
@@ -22,8 +22,8 @@ const PolicyManagement = () => {
 
   useEffect(() => { fetchPolicies(); }, []);
 
-  const openAdd = () => { setEditPol(null); setForm({ policyName: "", description: "", maxBudget: "", allowedClass: "Economy", maxTripDays: "", perDayAllowance: "", hotelLimitPerNight: "" }); setShowModal(true); };
-  const openEdit = (p) => { setEditPol(p); setForm({ policyName: p.policyName || "", description: p.description || "", maxBudget: p.maxBudget?.toString() || "", allowedClass: p.allowedClass || "Economy", maxTripDays: p.maxTripDays?.toString() || "", perDayAllowance: p.perDayAllowance?.toString() || "", hotelLimitPerNight: p.hotelLimitPerNight?.toString() || "" }); setShowModal(true); };
+  const openAdd = () => { setEditPol(null); setForm({ policyName: "", description: "", maxBudget: "", allowedClass: "Economy", maxTripDays: "", perDiemAllowance: "", hotelLimitPerNight: "" }); setShowModal(true); };
+  const openEdit = (p) => { setEditPol(p); setForm({ policyName: p.policyName || "", description: p.description || "", maxBudget: p.maxBudget?.toString() || "", allowedClass: p.allowedClass || "Economy", maxTripDays: p.maxTripDays?.toString() || "", perDiemAllowance: p.perDiemAllowance?.toString() || "", hotelLimitPerNight: p.hotelLimitPerNight?.toString() || "" }); setShowModal(true); };
 
   const handleSave = () => {
     if (!form.policyName) return toast.error("Policy name required");
@@ -34,7 +34,7 @@ const PolicyManagement = () => {
       maxBudget: parseFloat(form.maxBudget),
       allowedClass: form.allowedClass,
       maxTripDays: form.maxTripDays ? parseInt(form.maxTripDays) : undefined,
-      perDayAllowance: form.perDayAllowance ? parseFloat(form.perDayAllowance) : undefined,
+      perDiemAllowance: form.perDiemAllowance ? parseFloat(form.perDiemAllowance) : undefined,
       hotelLimitPerNight: form.hotelLimitPerNight ? parseFloat(form.hotelLimitPerNight) : undefined,
     };
     const promise = editPol
@@ -120,10 +120,10 @@ const PolicyManagement = () => {
                       <span className="text-slate-400">days</span>
                     </div>
                   )}
-                  {p.perDayAllowance && (
+                  {p.perDiemAllowance && (
                     <div className="flex items-center gap-1.5">
                       <Utensils size={15} className="text-amber-600" />
-                      <span className="font-semibold text-slate-700">₹{p.perDayAllowance}</span>
+                      <span className="font-semibold text-slate-700">₹{p.perDiemAllowance}</span>
                       <span className="text-slate-400">/day</span>
                     </div>
                   )}
@@ -191,7 +191,7 @@ const PolicyManagement = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1"><Utensils size={13} className="inline mr-1" /> Per Day (₹)</label>
-                  <input type="number" value={form.perDayAllowance} onChange={(e) => setForm({ ...form, perDayAllowance: e.target.value })}
+                  <input type="number" value={form.perDiemAllowance} onChange={(e) => setForm({ ...form, perDiemAllowance: e.target.value })}
                     className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="₹/day" />
                 </div>
                 <div>

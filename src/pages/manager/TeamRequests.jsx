@@ -53,7 +53,7 @@ const TeamRequests = () => {
       || (r.destination || "")?.toLowerCase().includes(q);
     const matchStatus = !statusFilter || r.status === statusFilter;
     return matchSearch && matchStatus;
-  });
+  }).sort((a, b) => (b.id || 0) - (a.id || 0));
 
   if (loading) return <div className="min-h-screen bg-slate-100 flex items-center justify-center"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-purple-600" /></div>;
 

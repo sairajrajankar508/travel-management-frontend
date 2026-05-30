@@ -28,7 +28,7 @@ const PendingApprovals = () => {
     const q = search.toLowerCase();
     return (r.employeeName || r.user?.name || "")?.toLowerCase().includes(q)
       || (r.destination || "")?.toLowerCase().includes(q);
-  });
+  }).sort((a, b) => (b.id || 0) - (a.id || 0));
 
   const handleReview = (id, approve) => {
     const c = comment[id] || "";

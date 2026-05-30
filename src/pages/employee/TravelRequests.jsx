@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import apiClient from "../../services/apiClient";
 import toast from "react-hot-toast";
-import { ClipboardList, Plus, Search, X, Send, Save, Trash2, Eye } from "lucide-react";
+import { ClipboardList, Plus, Search, X, Send, Save, Trash2, Eye, Pencil } from "lucide-react";
 
 const STATUS_BADGE = {
   DRAFT: "bg-gray-100 text-gray-700", SUBMITTED: "bg-blue-100 text-blue-700",
@@ -13,18 +13,21 @@ const STATUS_BADGE = {
   CANCELLED: "bg-slate-100 text-slate-700", REJECTED: "bg-red-100 text-red-700",
 };
 
+const EMPTY_FORM = {
+  source: "", destination: "", startDate: "", endDate: "",
+  budget: "", transportMode: "Flight", accommodation: "Hotel",
+  purpose: "", description: "",
+};
+
 const TravelRequests = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [tab, setTab] = useState("all");
   const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState(null);
   const [selectedReq, setSelectedReq] = useState(null);
-  const [form, setForm] = useState({
-    source: "", destination: "", startDate: "", endDate: "",
-    budget: "", transportMode: "Flight", accommodation: "Hotel",
-    purpose: "", description: "",
-  });
+  const [form, setForm] = useState({ ...EMPTY_FORM });
 
   const fetchRequests = () => {
     apiClient.get("/employee/requests").then((res) => {
@@ -47,39 +50,70 @@ const TravelRequests = () => {
     if (tab === "approved") return matchSearch && ["MANAGER_APPROVED", "FINANCE_APPROVED", "ITINERARY_CREATED", "TRAVEL_IN_PROGRESS"].includes(r.status);
     if (tab === "completed") return matchSearch && ["COMPLETED", "REIMBURSED"].includes(r.status);
     return matchSearch;
+  }).sort((a, b) => (b.id || 0) - (a.id || 0));
+
+  const openNewForm = () => {
+    setEditingId(null);
+    setForm({ ...EMPTY_FORM });
+    setShowForm(true);
+  };
+
+  const openEditForm = (r) => {
+    setEditingId(r.id);
+    setForm({
+      source: r.source || "",
+      destination: r.destination || "",
+      startDate: r.startDate || "",
+      endDate: r.endDate || "",
+      budget: r.budget || "",
+      transportMode: r.transportMode || "Flight",
+      accommodation: r.accommodation || "Hotel",
+      purpose: r.purpose || "",
+      description: r.description || "",
+    });
+    setShowForm(true);
+  };
+
+  const buildPayload = () => ({
+    ...form,
+    budget: parseFloat(form.budget) || 0,
+    startDate: form.startDate || null,
+    endDate: form.endDate || null,
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const payload = {
-      ...form,
-      budget: parseFloat(form.budget) || 0,
-      startDate: form.startDate || null,
-      endDate: form.endDate || null,
-    };
-    const promise = apiClient.post("/employee/request", payload).then(() => {
+    const payload = { ...buildPayload(), status: "SUBMITTED" };
+    const request = editingId
+      ? apiClient.put(`/employee/request/${editingId}`, payload)
+      : apiClient.post("/employee/request", payload);
+    const promise = request.then(() => {
       setShowForm(false);
-      setForm({ source: "", destination: "", startDate: "", endDate: "", budget: "", transportMode: "Flight", accommodation: "Hotel", purpose: "", description: "" });
+      setEditingId(null);
+      setForm({ ...EMPTY_FORM });
       fetchRequests();
     });
     toast.promise(promise, {
       loading: "Submitting request...",
-      success: "Request submitted for approval",
+      success: "Submitted for approval",
       error: (err) => err?.response?.data?.message || "Failed to submit",
     });
   };
 
   const saveDraft = () => {
-    const payload = {
-      ...form,
-      budget: parseFloat(form.budget) || 0,
-      startDate: form.startDate || null,
-      endDate: form.endDate || null,
-    };
-    const promise = apiClient.post("/employee/request", payload).then(() => { setShowForm(false); fetchRequests(); });
+    const payload = buildPayload();
+    const request = editingId
+      ? apiClient.put(`/employee/request/${editingId}`, payload)
+      : apiClient.post("/employee/request", payload);
+    const promise = request.then(() => {
+      setShowForm(false);
+      setEditingId(null);
+      setForm({ ...EMPTY_FORM });
+      fetchRequests();
+    });
     toast.promise(promise, {
       loading: "Saving draft...",
-      success: "Draft saved",
+      success: "Saved as draft",
       error: "Failed to save draft",
     });
   };
@@ -104,11 +138,11 @@ const TravelRequests = () => {
   };
 
   const deleteRequest = (id) => {
-    if (!confirm("Delete this request?")) return;
+    if (!confirm("Permanently delete this request? This cannot be undone.")) return;
     const promise = apiClient.delete(`/employee/delete/${id}`).then(() => fetchRequests());
     toast.promise(promise, {
       loading: "Deleting...",
-      success: "Deleted",
+      success: "Request deleted",
       error: "Failed to delete",
     });
   };
@@ -128,7 +162,7 @@ const TravelRequests = () => {
                 <p className="text-sm text-slate-400">{filtered.length} requests</p>
               </div>
             </div>
-            <button onClick={() => setShowForm(true)} className="px-5 py-2.5 rounded-2xl bg-green-600 hover:bg-green-700 text-white font-medium text-sm flex items-center gap-2 transition">
+            <button onClick={openNewForm} className="px-5 py-2.5 rounded-2xl bg-green-600 hover:bg-green-700 text-white font-medium text-sm flex items-center gap-2 transition">
               <Plus size={17} /> New Request
             </button>
           </div>
@@ -175,12 +209,16 @@ const TravelRequests = () => {
                       <div className="flex items-center justify-end gap-1">
                         {r.status === "DRAFT" && (
                           <>
+                            <button onClick={() => openEditForm(r)} className="p-2 rounded-lg hover:bg-amber-50 text-amber-600 transition" title="Edit"><Pencil size={15} /></button>
                             <button onClick={() => submitRequest(r.id)} className="p-2 rounded-lg hover:bg-green-50 text-green-600 transition" title="Submit"><Send size={15} /></button>
                             <button onClick={() => deleteRequest(r.id)} className="p-2 rounded-lg hover:bg-red-50 text-red-500 transition" title="Delete"><Trash2 size={15} /></button>
                           </>
                         )}
                         {!["DRAFT", "COMPLETED", "CANCELLED", "REJECTED"].includes(r.status) && (
                           <button onClick={() => cancelRequest(r.id)} className="p-2 rounded-lg hover:bg-red-50 text-red-500 transition" title="Cancel"><X size={15} /></button>
+                        )}
+                        {["CANCELLED", "REJECTED"].includes(r.status) && (
+                          <button onClick={() => deleteRequest(r.id)} className="p-2 rounded-lg hover:bg-red-50 text-red-500 transition" title="Delete"><Trash2 size={15} /></button>
                         )}
                         <button onClick={() => setSelectedReq(r)} className="p-2 rounded-lg hover:bg-blue-50 text-blue-600 transition" title="View Details"><Eye size={15} /></button>
                       </div>
@@ -234,12 +272,12 @@ const TravelRequests = () => {
 
       </div>
 
-      {/* CREATE REQUEST MODAL */}
+      {/* CREATE / EDIT REQUEST MODAL */}
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm overflow-y-auto py-6" onClick={() => setShowForm(false)}>
           <div className="bg-white rounded-3xl shadow-2xl p-6 w-full max-w-2xl mx-4 my-8" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-5">
-              <h2 className="text-xl font-bold text-slate-800">New Travel Request</h2>
+              <h2 className="text-xl font-bold text-slate-800">{editingId ? "Edit Travel Request" : "New Travel Request"}</h2>
               <button onClick={() => setShowForm(false)} className="p-1 rounded-lg hover:bg-slate-100 text-slate-400"><X size={20} /></button>
             </div>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -303,7 +341,7 @@ const TravelRequests = () => {
                   <Save size={16} /> Save Draft
                 </button>
                 <button type="submit" className="px-6 py-2.5 rounded-2xl bg-green-600 hover:bg-green-700 text-white font-medium text-sm flex items-center gap-2 transition">
-                  <Send size={16} /> Submit
+                  <Send size={16} /> {editingId ? "Update & Submit" : "Submit"}
                 </button>
               </div>
             </form>

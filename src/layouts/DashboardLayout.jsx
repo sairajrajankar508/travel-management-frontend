@@ -53,13 +53,13 @@ const DashboardLayout = () => {
 
     return (
 
-        <div className="flex h-screen bg-linear-to-br from-slate-50 via-white to-blue-50/40 overflow-hidden">
+        <div className="flex h-screen bg-slate-100 overflow-hidden">
 
             {/* ========================================== */}
             {/* SIDEBAR */}
             {/* ========================================== */}
 
-            <aside className="shadow-lg border-r border-blue-100/50 hidden md:block">
+            <aside className="shadow-lg border-r border-slate-200 hidden md:block">
 
                 {renderSidebar()}
 

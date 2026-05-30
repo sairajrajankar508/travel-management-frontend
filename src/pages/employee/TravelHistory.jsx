@@ -35,7 +35,7 @@ const TravelHistory = () => {
   const filtered = requests.filter((r) => {
     const q = search.toLowerCase();
     return r.destination?.toLowerCase().includes(q) || r.purpose?.toLowerCase().includes(q);
-  });
+  }).sort((a, b) => (b.id || 0) - (a.id || 0));
 
   // Charts
   const monthlyMap = {};
@@ -144,7 +144,7 @@ const TravelHistory = () => {
                 </tr>
               </thead>
               <tbody>
-                {filtered.slice().reverse().map((r) => (
+                {filtered.map((r) => (
                   <tr key={r.id} className="border-b border-slate-100 hover:bg-slate-50 transition">
                     <td className="py-3.5 pr-4 font-medium text-slate-800">{r.destination || "—"}</td>
                     <td className="py-3.5 pr-4 text-slate-500 text-sm">{r.purpose || "—"}</td>

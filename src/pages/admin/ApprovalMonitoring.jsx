@@ -46,7 +46,7 @@ const ApprovalMonitoring = () => {
     ["REJECTED", "CANCELLED"].includes(r.status)
   );
 
-  const displayRequests = tab === "pending" ? pending : tab === "stuck" ? stuck : tab === "completed" ? completed : rejected;
+  const displayRequests = (tab === "pending" ? pending : tab === "stuck" ? stuck : tab === "completed" ? completed : rejected).sort((a, b) => (b.id || 0) - (a.id || 0));
 
   if (loading) return <div className="min-h-screen bg-slate-100 flex items-center justify-center"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" /></div>;
 
@@ -92,7 +92,6 @@ const ApprovalMonitoring = () => {
                   <th className="pb-3 pr-4">Destination</th>
                   <th className="pb-3 pr-4">Budget</th>
                   <th className="pb-3 pr-4">Current Stage</th>
-                  <th className="pb-3 pr-4">Submitted</th>
                 </tr>
               </thead>
               <tbody>
@@ -106,12 +105,9 @@ const ApprovalMonitoring = () => {
                         {r.status?.replace(/_/g, " ")}
                       </span>
                     </td>
-                    <td className="py-3.5 pr-4 text-sm text-slate-400">
-                      {r.createdAt ? new Date(r.createdAt).toLocaleDateString() : "—"}
-                    </td>
                   </tr>
                 ))}
-                {displayRequests.length === 0 && <tr><td colSpan="5" className="text-center text-slate-400 py-12">No requests in this stage</td></tr>}
+                {displayRequests.length === 0 && <tr><td colSpan="4" className="text-center text-slate-400 py-12">No requests in this stage</td></tr>}
               </tbody>
             </table>
           </div>
