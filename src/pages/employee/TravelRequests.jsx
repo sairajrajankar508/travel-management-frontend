@@ -127,16 +127,6 @@ const TravelRequests = () => {
     });
   };
 
-  const cancelRequest = (id) => {
-    if (!confirm("Cancel this request?")) return;
-    const promise = apiClient.put(`/employee/cancel/${id}`).then(() => fetchRequests());
-    toast.promise(promise, {
-      loading: "Cancelling...",
-      success: "Cancelled",
-      error: "Failed to cancel",
-    });
-  };
-
   const deleteRequest = (id) => {
     if (!confirm("Permanently delete this request? This cannot be undone.")) return;
     const promise = apiClient.delete(`/employee/delete/${id}`).then(() => fetchRequests());
@@ -153,7 +143,7 @@ const TravelRequests = () => {
     <div className="min-h-screen bg-slate-100 p-6">
       <div className="max-w-7xl mx-auto">
         <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
-          {/* HEADER */}
+         
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <ClipboardList className="text-3xl text-slate-700" />
@@ -167,7 +157,7 @@ const TravelRequests = () => {
             </button>
           </div>
 
-          {/* TABS + SEARCH */}
+         
           <div className="flex flex-wrap items-center gap-3 mb-5">
             {["all", "draft", "pending", "approved", "completed"].map((t) => (
               <button key={t} onClick={() => setTab(t)}
@@ -182,7 +172,7 @@ const TravelRequests = () => {
             </div>
           </div>
 
-          {/* TABLE */}
+          
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
@@ -211,13 +201,9 @@ const TravelRequests = () => {
                           <>
                             <button onClick={() => openEditForm(r)} className="p-2 rounded-lg hover:bg-amber-50 text-amber-600 transition" title="Edit"><Pencil size={15} /></button>
                             <button onClick={() => submitRequest(r.id)} className="p-2 rounded-lg hover:bg-green-50 text-green-600 transition" title="Submit"><Send size={15} /></button>
-                            <button onClick={() => deleteRequest(r.id)} className="p-2 rounded-lg hover:bg-red-50 text-red-500 transition" title="Delete"><Trash2 size={15} /></button>
                           </>
                         )}
-                        {!["DRAFT", "COMPLETED", "CANCELLED", "REJECTED"].includes(r.status) && (
-                          <button onClick={() => cancelRequest(r.id)} className="p-2 rounded-lg hover:bg-red-50 text-red-500 transition" title="Cancel"><X size={15} /></button>
-                        )}
-                        {["CANCELLED", "REJECTED"].includes(r.status) && (
+                        {r.status !== "COMPLETED" && (
                           <button onClick={() => deleteRequest(r.id)} className="p-2 rounded-lg hover:bg-red-50 text-red-500 transition" title="Delete"><Trash2 size={15} /></button>
                         )}
                         <button onClick={() => setSelectedReq(r)} className="p-2 rounded-lg hover:bg-blue-50 text-blue-600 transition" title="View Details"><Eye size={15} /></button>
@@ -231,7 +217,7 @@ const TravelRequests = () => {
           </div>
         </div>
 
-        {/* VIEW DETAILS MODAL */}
+       
         {selectedReq && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={() => setSelectedReq(null)}>
             <div className="bg-white rounded-3xl shadow-2xl p-6 w-full max-w-lg mx-4" onClick={(e) => e.stopPropagation()}>
@@ -272,7 +258,7 @@ const TravelRequests = () => {
 
       </div>
 
-      {/* CREATE / EDIT REQUEST MODAL */}
+   
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm overflow-y-auto py-6" onClick={() => setShowForm(false)}>
           <div className="bg-white rounded-3xl shadow-2xl p-6 w-full max-w-2xl mx-4 my-8" onClick={(e) => e.stopPropagation()}>

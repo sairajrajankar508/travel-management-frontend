@@ -3,8 +3,7 @@ import apiClient from "../../services/apiClient";
 import { useNavigate } from "react-router-dom";
 import {
   LayoutDashboard, ClipboardList, Plane, DollarSign, Clock,
-  Receipt, History, MapPinned, ChevronRight, CheckCircle, XCircle,
-  Send, ShieldCheck, UserCheck, CreditCard, Flag, AlertTriangle,
+  Receipt, History, ChevronRight,
 } from "lucide-react";
 
 const statusBadge = {
@@ -16,28 +15,6 @@ const statusBadge = {
   EXPENSE_REVIEW: "bg-rose-100 text-rose-700", REIMBURSED: "bg-emerald-100 text-emerald-700",
   COMPLETED: "bg-green-100 text-green-700", CANCELLED: "bg-slate-100 text-slate-700", REJECTED: "bg-red-100 text-red-700",
 };
-
-const ALL_STEPS = [
-  { key: "SUBMITTED", label: "Submitted", icon: Send },
-  { key: "MANAGER_REVIEW", label: "Manager", icon: UserCheck },
-  { key: "FINANCE_REVIEW", label: "Finance", icon: CreditCard },
-  { key: "FINANCE_APPROVED", label: "Approved", icon: CheckCircle },
-  { key: "ITINERARY_CREATED", label: "Itinerary", icon: MapPinned },
-  { key: "TRAVEL_STARTED", label: "Travel", icon: Plane },
-  { key: "EXPENSE_SUBMITTED", label: "Expense", icon: Receipt },
-  { key: "EXPENSE_REVIEW", label: "Review", icon: ShieldCheck },
-  { key: "REIMBURSED", label: "Paid", icon: DollarSign },
-];
-
-const STATUS_MAP = {
-  DRAFT: -1, SUBMITTED: 0, POLICY_VALIDATION: 0.5, MANAGER_REVIEW: 1,
-  FINANCE_REVIEW: 2, MANAGER_APPROVED: 2.5, FINANCE_APPROVED: 3,
-  ITINERARY_CREATED: 4, TRAVEL_IN_PROGRESS: 5,
-  EXPENSE_SUBMITTED: 6, EXPENSE_REVIEW: 7, REIMBURSED: 8, COMPLETED: 8,
-  CANCELLED: -2, REJECTED: -2,
-};
-
-const CANCEL_STATUSES = ["CANCELLED", "REJECTED"];
 
 const EmployeeDashboard = () => {
   const navigate = useNavigate();
@@ -81,71 +58,6 @@ const EmployeeDashboard = () => {
   const reimbursements = expenses.filter((e) => ["FINANCE_APPROVED", "REIMBURSED", "REJECTED"].includes(e.status));
   const history = requests.filter((r) => ["COMPLETED", "REIMBURSED", "TRAVEL_IN_PROGRESS", "CANCELLED", "REJECTED"].includes(r.status));
 
-  const renderHorizontalStepper = (r) => {
-    const pos = STATUS_MAP[r.status] ?? -1;
-    const isCancelled = CANCEL_STATUSES.includes(r.status);
-    const hasViolation = r.policyViolated || r.status === "POLICY_VALIDATION";
-
-    if (isCancelled) {
-      return (
-        <div className="flex items-center gap-2 text-sm text-red-500 py-1">
-          <XCircle size={15} /> Request {r.status === "CANCELLED" ? "cancelled" : "rejected"}
-        </div>
-      );
-    }
-
-    return (
-      <div className="overflow-x-auto pb-1">
-        <div className="flex items-center gap-0 min-w-max">
-          {ALL_STEPS.map((step, i) => {
-            const StepIcon = step.icon;
-            const stepPos = STATUS_MAP[step.key];
-            const done = pos > stepPos;
-            const current = pos === stepPos ||
-              (step.key === "MANAGER_REVIEW" && pos === 0.5) ||
-              (step.key === "FINANCE_REVIEW" && pos === 2.5);
-
-            return (
-              <div key={step.key} className="flex items-center">
-                <div className="flex flex-col items-center">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
-                    done ? "bg-green-500" : current ? "bg-blue-600 ring-2 ring-blue-200" : "bg-slate-200"
-                  }`}>
-                    {done ? <CheckCircle size={16} className="text-white" /> :
-                     <StepIcon size={14} className={current ? "text-white" : "text-slate-400"} />}
-                  </div>
-                  <span className={`text-[10px] mt-1.5 whitespace-nowrap font-medium ${
-                    done ? "text-green-600" : current ? "text-blue-700" : "text-slate-400"
-                  }`}>{step.label}</span>
-                </div>
-                {i < ALL_STEPS.length - 1 && (
-                  <div className={`w-10 md:w-16 h-0.5 mx-1 mb-5 rounded-full ${
-                    pos > stepPos + 0.5 ? "bg-green-400" : pos >= stepPos ? "bg-blue-400" : "bg-slate-200"
-                  }`} />
-                )}
-              </div>
-            );
-          })}
-
-          {hasViolation && (
-            <div className="ml-3 flex items-center gap-1.5 text-[11px] text-orange-700 bg-orange-50 px-2.5 py-1.5 rounded-lg border border-orange-200 whitespace-nowrap">
-              <AlertTriangle size={12} />
-              <span>{r.policyViolationReason ? "Policy: " + r.policyViolationReason : "Policy check"}</span>
-              {pos === 0.5 && <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />}
-            </div>
-          )}
-
-          {(pos === 8 || r.status === "COMPLETED") && (
-            <div className="ml-3 flex items-center gap-1.5 text-[11px] text-green-700 bg-green-50 px-2.5 py-1.5 rounded-lg border border-green-200 whitespace-nowrap">
-              <Flag size={12} />
-              <span>Completed</span>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  };
-
   return (
     <div className="min-h-screen bg-slate-100 p-6">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -154,7 +66,7 @@ const EmployeeDashboard = () => {
           <h1 className="text-3xl font-bold text-slate-800">Employee Dashboard</h1>
         </div>
 
-        {/* STATS CARDS */}
+        
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {cards.map((c) => (
             <div key={c.label} onClick={() => navigate(c.path)} className="bg-white rounded-2xl shadow-md border border-slate-200 p-5 flex items-center gap-4 cursor-pointer hover:shadow-lg hover:border-green-200 transition">
@@ -167,42 +79,10 @@ const EmployeeDashboard = () => {
           ))}
         </div>
 
-        {/* CURRENT REQUEST STATUS — full-width horizontal pipeline */}
-        <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
-          <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><MapPinned size={20} /> Current Request Status</h2>
-          {requests.length === 0 ? (
-            <p className="text-slate-400 text-center py-8">No requests yet</p>
-          ) : (
-            <div className="space-y-4">
-              {requests.slice(-1).map((r) => (
-                <div key={r.id} className="bg-slate-50 rounded-xl p-4 border border-slate-200">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className={`w-2 h-2 rounded-full shrink-0 ${
-                        CANCEL_STATUSES.includes(r.status) ? "bg-red-500" :
-                        r.status === "COMPLETED" || r.status === "REIMBURSED" ? "bg-green-500" :
-                        "bg-blue-500"
-                      }`} />
-                      <div>
-                        <p className="font-semibold text-slate-800 text-sm">{r.destination || "Travel Request"}</p>
-                        <p className="text-xs text-slate-400">₹{r.budget?.toLocaleString() || "0"} · {r.createdAt ? new Date(r.createdAt).toLocaleDateString() : ""}</p>
-                      </div>
-                    </div>
-                    <span className={`px-2.5 py-1 rounded-full text-[11px] font-medium shrink-0 ${statusBadge[r.status] || "bg-slate-100 text-slate-700"}`}>
-                      {r.status?.replace(/_/g, " ")}
-                    </span>
-                  </div>
-                  {renderHorizontalStepper(r)}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* SECTION PREVIEWS */}
+        
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-          {/* TRAVEL REQUESTS */}
+         
           <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-5">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-base font-bold text-slate-800 flex items-center gap-2"><ClipboardList size={17} /> Travel Requests</h2>
@@ -225,7 +105,7 @@ const EmployeeDashboard = () => {
             )}
           </div>
 
-          {/* EXPENSES */}
+          
           <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-5">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-base font-bold text-slate-800 flex items-center gap-2"><Receipt size={17} /> My Expenses</h2>
@@ -248,7 +128,7 @@ const EmployeeDashboard = () => {
             )}
           </div>
 
-          {/* REIMBURSEMENTS */}
+         
           <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-5">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-base font-bold text-slate-800 flex items-center gap-2"><DollarSign size={17} /> Reimbursements</h2>
@@ -271,7 +151,7 @@ const EmployeeDashboard = () => {
             )}
           </div>
 
-          {/* TRAVEL HISTORY */}
+          
           <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-5">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-base font-bold text-slate-800 flex items-center gap-2"><History size={17} /> Travel History</h2>

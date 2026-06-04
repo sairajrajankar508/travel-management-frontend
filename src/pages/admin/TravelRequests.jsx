@@ -75,7 +75,7 @@ const TravelRequests = () => {
     <div className="min-h-screen bg-slate-100 p-6">
       <div className="max-w-7xl mx-auto">
         <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
-          {/* HEADER */}
+       
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <ClipboardList className="text-3xl text-slate-700" />
@@ -89,7 +89,7 @@ const TravelRequests = () => {
             </button>
           </div>
 
-          {/* SEARCH + FILTERS */}
+          
           <div className="relative mb-4">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
             <input type="text" placeholder="Search by employee, destination, or purpose..." value={search} onChange={(e) => setSearch(e.target.value)}
@@ -106,7 +106,7 @@ const TravelRequests = () => {
             </div>
           )}
 
-          {/* TABLE */}
+          
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>

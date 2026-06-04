@@ -64,7 +64,7 @@ const AuditLogs = () => {
             </button>
           </div>
 
-          {/* SEARCH + FILTERS */}
+          
           <div className="relative mb-4">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
             <input type="text" placeholder="Search by action, user, or status..." value={search} onChange={(e) => setSearch(e.target.value)}
@@ -81,7 +81,7 @@ const AuditLogs = () => {
             </div>
           )}
 
-          {/* LOG ENTRIES */}
+
           <div className="space-y-2">
             {filtered.map((l, i) => (
               <div key={l.id || i} className="flex items-center justify-between bg-slate-50 rounded-2xl px-5 py-3.5 border border-slate-200 hover:bg-slate-100 transition">

@@ -6,7 +6,6 @@ import { NavLink } from "react-router-dom";
 import {
   LayoutDashboard,
   Users,
-  Building2,
   ShieldCheck,
   ClipboardList,
   GitBranch,
@@ -21,10 +20,6 @@ import {
 const AdminSidebar = () => {
   const [userOpen, setUserOpen] = useState(true);
   
-  
-
-  
-
   const linkClass = ({ isActive }) =>
     `flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 text-sm font-medium ${
       isActive
@@ -54,14 +49,14 @@ const AdminSidebar = () => {
         </div>
       </div>
 
-      {/* MENU */}
+      
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
         <NavLink to="/admin/dashboard" className={linkClass} end>
           <LayoutDashboard size={18} />
           <span>Dashboard</span>
         </NavLink>
 
-        {/* User Management (expandable) */}
+
         <div>
           <button
             onClick={() => setUserOpen(!userOpen)}
@@ -94,11 +89,6 @@ const AdminSidebar = () => {
             </div>
           )}
         </div>
-
-        <NavLink to="/admin/departments" className={linkClass}>
-          <Building2 size={18} />
-          <span>Department Management</span>
-        </NavLink>
 
         <NavLink to="/admin/policies" className={linkClass}>
           <ShieldCheck size={18} />

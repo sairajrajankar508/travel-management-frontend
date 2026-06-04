@@ -61,13 +61,13 @@ const ApprovalMonitoring = () => {
     <div className="min-h-screen bg-slate-100 p-6">
       <div className="max-w-7xl mx-auto">
         <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
-          {/* HEADER */}
+          
           <div className="flex items-center gap-3 mb-6">
             <GitBranch className="text-3xl text-slate-700" />
             <h1 className="text-2xl font-bold text-slate-800">Approval Monitoring</h1>
           </div>
 
-          {/* TABS */}
+          
           <div className="flex gap-3 mb-6">
             {tabs.map((t) => (
               <button key={t.key} onClick={() => setTab(t.key)}
@@ -83,7 +83,7 @@ const ApprovalMonitoring = () => {
             ))}
           </div>
 
-          {/* TABLE */}
+          
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
@@ -112,7 +112,7 @@ const ApprovalMonitoring = () => {
             </table>
           </div>
 
-          {/* APPROVAL FLOW DIAGRAM */}
+          
           <div className="mt-8 p-5 bg-slate-50 rounded-2xl border border-slate-200">
             <h3 className="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-2">
               <RefreshCw size={16} /> Approval Flow

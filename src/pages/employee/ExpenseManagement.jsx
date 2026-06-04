@@ -140,7 +140,7 @@ const Expenses = () => {
         </div>
       </div>
 
-      {/* ADD EXPENSE MODAL */}
+      
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={() => setShowForm(false)}>
           <div className="bg-white rounded-3xl shadow-2xl p-6 w-full max-w-md mx-4" onClick={(e) => e.stopPropagation()}>
@@ -174,7 +174,7 @@ const Expenses = () => {
                   className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-400" required>
                   <option value="">Select a request...</option>
                   {travelRequests.filter(r => r.status === "TRAVEL_IN_PROGRESS").map(r => (
-                    <option key={r.id} value={r.id}>#{r.id} — {r.fromLocation} → {r.toLocation}</option>
+                    <option key={r.id} value={r.id}>#{r.id} — {r.source} → {r.destination}</option>
                   ))}
                 </select>
               </div>

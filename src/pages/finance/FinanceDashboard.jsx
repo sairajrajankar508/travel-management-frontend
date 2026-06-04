@@ -3,11 +3,8 @@ import apiClient from "../../services/apiClient";
 import { useNavigate } from "react-router-dom";
 import {
   LayoutDashboard, Wallet, Clock, CheckCircle, XCircle, DollarSign,
-  ChevronRight, Receipt, Plane, TrendingUp, ClipboardCheck, Banknote,
+  ChevronRight, Receipt, Plane, ClipboardCheck, Banknote,
 } from "lucide-react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
-
-const PIE_COLORS = ["#f59e0b", "#22c55e", "#3b82f6", "#ef4444", "#a855f7", "#14b8a6"];
 
 const STATUS_BADGE = {
   SUBMITTED: "bg-blue-100 text-blue-700",
@@ -22,8 +19,6 @@ const STATUS_BADGE = {
 const FinanceDashboard = () => {
   const navigate = useNavigate();
   const [stats, setStats] = useState(null);
-  const [categoryData, setCategoryData] = useState([]);
-  const [monthlyData, setMonthlyData] = useState([]);
   const [travelRequests, setTravelRequests] = useState([]);
   const [pendingExpenses, setPendingExpenses] = useState([]);
   const [recentExpenses, setRecentExpenses] = useState([]);
@@ -33,16 +28,12 @@ const FinanceDashboard = () => {
   useEffect(() => {
     Promise.all([
       apiClient.get("/finance/dashboard"),
-      apiClient.get("/finance/category-report"),
-      apiClient.get("/finance/monthly-report"),
       apiClient.get("/finance/travel-requests"),
       apiClient.get("/finance/pending-approvals"),
       apiClient.get("/finance/recent-expenses"),
       apiClient.get("/finance/payment-history"),
-    ]).then(([dash, cat, month, travel, pend, recent, pay]) => {
+    ]).then(([dash, travel, pend, recent, pay]) => {
       setStats(dash.data);
-      setCategoryData(Object.entries(cat.data || {}).map(([k, v]) => ({ name: k, value: v })));
-      setMonthlyData(Object.entries(month.data || {}).map(([k, v]) => ({ month: k, amount: v })));
       setTravelRequests(travel.data || []);
       setPendingExpenses(pend.data || []);
       setRecentExpenses(recent.data || []);
@@ -68,23 +59,16 @@ const FinanceDashboard = () => {
     { label: "Rejected", value: stats?.rejected || 0, icon: XCircle, color: "bg-red-500", path: "/finance/expenses" },
   ];
 
-  const pieData = [
-    { name: "Pending", value: stats?.pending || 0 },
-    { name: "Approved", value: stats?.approved || 0 },
-    { name: "Reimbursed", value: stats?.reimbursed || 0 },
-    { name: "Rejected", value: stats?.rejected || 0 },
-  ].filter((d) => d.value > 0);
-
   return (
     <div className="min-h-screen bg-slate-100 p-6">
       <div className="max-w-7xl mx-auto space-y-6">
-        {/* HEADER */}
+        
         <div className="flex items-center gap-3">
           <LayoutDashboard className="text-3xl text-slate-700" />
           <h1 className="text-3xl font-bold text-slate-800">Finance Dashboard</h1>
         </div>
 
-        {/* STAT CARDS */}
+        
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {cards.map((c) => (
             <div key={c.label} onClick={() => navigate(c.path)} className="bg-white rounded-2xl shadow-md border border-slate-200 p-4 flex items-center gap-3 cursor-pointer hover:shadow-lg hover:border-amber-200 transition">
@@ -97,56 +81,7 @@ const FinanceDashboard = () => {
           ))}
         </div>
 
-        {/* CHARTS */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
-            <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><TrendingUp size={18} /> Monthly Expenses</h2>
-            {monthlyData.length === 0 ? (
-              <p className="text-slate-400 text-center py-12 text-sm">No data</p>
-            ) : (
-              <ResponsiveContainer width="100%" height={240}>
-                <BarChart data={monthlyData}>
-                  <XAxis dataKey="month" tick={{ fontSize: 11 }} />
-                  <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`} />
-                  <Tooltip formatter={(v) => `₹${v.toLocaleString()}`} />
-                  <Bar dataKey="amount" fill="#f59e0b" radius={[6, 6, 0, 0]} name="Amount" />
-                </BarChart>
-              </ResponsiveContainer>
-            )}
-          </div>
-          <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
-            <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><Receipt size={18} /> Category Breakdown</h2>
-            {categoryData.length === 0 ? (
-              <p className="text-slate-400 text-center py-12 text-sm">No data</p>
-            ) : (
-              <ResponsiveContainer width="100%" height={240}>
-                <PieChart>
-                  <Pie data={categoryData} cx="50%" cy="50%" outerRadius={85} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}>
-                    {categoryData.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            )}
-          </div>
-          <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
-            <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><DollarSign size={18} /> Expense Status</h2>
-            {pieData.length === 0 ? (
-              <p className="text-slate-400 text-center py-12 text-sm">No data</p>
-            ) : (
-              <ResponsiveContainer width="100%" height={240}>
-                <PieChart>
-                  <Pie data={pieData} cx="50%" cy="50%" outerRadius={85} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}>
-                    {pieData.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            )}
-          </div>
-        </div>
-
-        {/* PENDING TRAVEL APPROVALS - Last 5 */}
+        
         <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2"><Plane size={20} /> Pending Travel Approvals</h2>
@@ -184,7 +119,7 @@ const FinanceDashboard = () => {
           )}
         </div>
 
-        {/* PENDING EXPENSES - Last 5 */}
+        
         <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2"><ClipboardCheck size={20} /> Pending Expenses</h2>
@@ -222,7 +157,7 @@ const FinanceDashboard = () => {
           )}
         </div>
 
-        {/* RECENT EXPENSES - Last 5 */}
+       
         <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2"><Receipt size={20} /> Recent Expenses</h2>
@@ -262,7 +197,7 @@ const FinanceDashboard = () => {
           )}
         </div>
 
-        {/* REIMBURSEMENTS - Last 5 */}
+       
         <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2"><Banknote size={20} /> Reimbursements</h2>

@@ -132,7 +132,7 @@ const TeamRequests = () => {
         </div>
       </div>
 
-      {/* VIEW DETAILS + ITINERARY MODAL */}
+     
       {selectedReq && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={() => setSelectedReq(null)}>
           <div className="bg-white rounded-3xl shadow-2xl p-6 w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
@@ -141,7 +141,7 @@ const TeamRequests = () => {
               <button onClick={() => setSelectedReq(null)} className="p-1 rounded-lg hover:bg-slate-100 text-slate-400"><X size={20} /></button>
             </div>
 
-            {/* Request Info */}
+           
             <div className="space-y-3 text-sm mb-4">
               <div className="grid grid-cols-2 gap-3 min-w-0 *:min-w-0 *:wrap-break-word">
                 <div><span className="text-slate-500">Employee:</span><p className="font-medium text-slate-800">{selectedReq.employeeName || selectedReq.user?.name || "N/A"}</p></div>
@@ -153,7 +153,7 @@ const TeamRequests = () => {
               </div>
             </div>
 
-            {/* Itinerary */}
+           
             <div className="pt-4 border-t border-slate-200">
               <h3 className="text-sm font-semibold text-slate-600 flex items-center gap-2 mb-3"><MapPinned size={15} /> Itinerary</h3>
               {itinLoading ? (

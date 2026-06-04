@@ -35,7 +35,7 @@ const Navbar = () => {
         try {
             const res = await apiClient.get("/policies");
             setPolicies(Array.isArray(res.data) ? res.data : []);
-        } catch (err) {
+        } catch {
             setPolicies([]);
             toast.error("Failed to load policies");
         }
@@ -54,15 +54,15 @@ const Navbar = () => {
             role === "FINANCE" ? "border-amber-200" :
             "border-blue-200"
         }`}>
-            {/* LEFT */}
+           
             <div>
                 <h1 className="text-lg font-bold text-slate-800">Corporate Travel Hub</h1>
                 <p className="text-xs text-slate-400">{meta.label}</p>
             </div>
 
-            {/* RIGHT */}
+            
             <div className="flex items-center gap-4">
-                {/* VIEW POLICIES */}
+                
                 <button onClick={openPolicies} className={`flex items-center gap-1.5 text-sm font-medium px-3 py-2 rounded-lg transition ${
                     role === "ADMIN" ? "text-slate-500 hover:text-red-600 hover:bg-red-50" :
                     role === "MANAGER" ? "text-slate-500 hover:text-purple-600 hover:bg-purple-50" :
@@ -72,7 +72,7 @@ const Navbar = () => {
                     <FileText size={16} /> Policies
                 </button>
 
-                {/* USER */}
+               
                 <div className="flex items-center gap-3">
                     <div className={`w-9 h-9 rounded-full ${meta.avatar} flex items-center justify-center`}>
                         <User size={18} />
@@ -83,20 +83,20 @@ const Navbar = () => {
                     </div>
                 </div>
 
-                {/* ROLE BADGE — matching login page pill style */}
+                
                 <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-medium ${meta.badge}`}>
                     <Shield size={13} />
                     <span>{role}</span>
                 </div>
 
-                {/* LOGOUT */}
+                
                 <button onClick={handleLogout} className="flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-red-600 px-3 py-2 rounded-lg hover:bg-red-50 transition">
                     <LogOut size={16} /> Logout
                 </button>
             </div>
         </header>
 
-        {/* POLICIES MODAL — outside header to avoid backdrop-filter breaking fixed positioning */}
+       
         {showPolicies && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={() => setShowPolicies(false)}>
                 <div className="bg-white rounded-3xl shadow-2xl p-6 w-full max-w-2xl mx-4 max-h-[85vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>

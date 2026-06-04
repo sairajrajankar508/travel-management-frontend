@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
 import apiClient from "../../services/apiClient";
 import toast from "react-hot-toast";
-import { Wallet, CheckCircle, Clock, DollarSign, TrendingUp } from "lucide-react";
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
-
-const PIE_COLORS = ["#22c55e", "#3b82f6", "#f59e0b", "#ef4444"];
+import { Wallet, CheckCircle, Clock, DollarSign } from "lucide-react";
 
 const Reimbursements = () => {
     const [expenses, setExpenses] = useState([]);
@@ -42,12 +39,6 @@ const Reimbursements = () => {
     const totalReimbursed = reimbursed.reduce((s, e) => s + e.amount, 0);
     const totalRejected = rejected.reduce((s, e) => s + e.amount, 0);
 
-    const pieData = [
-        { name: "Approved", value: approved.length },
-        { name: "Reimbursed", value: reimbursed.length },
-        { name: "Rejected", value: rejected.length },
-    ].filter(d => d.value > 0);
-
     if (loading) return <div className="min-h-screen bg-slate-100 flex items-center justify-center"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-amber-600" /></div>;
 
     return (
@@ -73,20 +64,6 @@ const Reimbursements = () => {
                             </div>
                         </div>
                     ))}
-                </div>
-
-                <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-6">
-                    <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><TrendingUp size={18} /> Reimbursement Overview</h2>
-                    {pieData.length === 0 ? <p className="text-slate-400 text-center py-12">No data</p> : (
-                        <ResponsiveContainer width="100%" height={240}>
-                            <PieChart>
-                                <Pie data={pieData} cx="50%" cy="50%" outerRadius={80} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}>
-                                    {pieData.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
-                                </Pie>
-                                <Tooltip />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    )}
                 </div>
 
                 <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">

@@ -75,7 +75,7 @@ const UserManagement = () => {
     <div className="min-h-screen bg-slate-100 p-6">
       <div className="max-w-7xl mx-auto">
         <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
-          {/* HEADER */}
+         
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <Users className="text-3xl text-slate-700" />
@@ -89,14 +89,14 @@ const UserManagement = () => {
             </button>
           </div>
 
-          {/* SEARCH */}
+         
           <div className="relative mb-5">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
             <input type="text" placeholder="Search by name or email..." value={search} onChange={(e) => setSearch(e.target.value)}
               className="w-full border border-slate-300 rounded-2xl pl-11 pr-5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
           </div>
 
-          {/* TABLE */}
+          
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
@@ -150,7 +150,7 @@ const UserManagement = () => {
         </div>
       </div>
 
-      {/* MODAL */}
+     
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={() => setShowModal(false)}>
           <div className="bg-white rounded-3xl shadow-2xl p-6 w-full max-w-md mx-4" onClick={(e) => e.stopPropagation()}>

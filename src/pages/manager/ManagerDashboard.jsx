@@ -3,11 +3,8 @@ import apiClient from "../../services/apiClient";
 import { useNavigate } from "react-router-dom";
 import {
   LayoutDashboard, ClipboardList, Clock, CheckCircle, DollarSign,
-  ChevronRight, History, Users, Plane, XCircle, AlertTriangle, Eye,
+  ChevronRight, History, Users
 } from "lucide-react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
-
-const PIE_COLORS = ["#3b82f6", "#22c55e", "#f59e0b", "#ef4444", "#a855f7", "#64748b", "#14b8a6"];
 
 const STATUS_BADGE = {
   DRAFT: "bg-gray-100 text-gray-700",
@@ -34,7 +31,6 @@ const ManagerDashboard = () => {
   const [teamRequests, setTeamRequests] = useState([]);
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showDetails, setShowDetails] = useState(null);
 
   useEffect(() => {
     Promise.all([
@@ -59,27 +55,6 @@ const ManagerDashboard = () => {
   }
 
   const last5 = (arr) => arr?.slice(-5).reverse() || [];
-
-  // Charts data from team requests
-  const monthlyMap = {};
-  teamRequests.forEach((r) => {
-    if (r.createdAt) {
-      const m = new Date(r.createdAt).toLocaleString("default", { month: "short", year: "2-digit" });
-      if (!monthlyMap[m]) monthlyMap[m] = { name: m, requests: 0 };
-      monthlyMap[m].requests++;
-    }
-  });
-  const monthlyData = Object.values(monthlyMap).slice(-8);
-
-  const statusCount = {};
-  teamRequests.forEach((r) => {
-    const s = r.status || "UNKNOWN";
-    statusCount[s] = (statusCount[s] || 0) + 1;
-  });
-  const pieData = Object.entries(statusCount).map(([name, value]) => ({
-    name: name.replace(/_/g, " "),
-    value,
-  }));
 
   const cards = [
     { label: "Total Requests", value: stats?.totalRequests || 0, icon: ClipboardList, color: "bg-purple-500", path: "/manager/team-requests" },
@@ -110,41 +85,7 @@ const ManagerDashboard = () => {
           ))}
         </div>
 
-        {/* CHARTS */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
-            <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><ClipboardList size={20} /> Monthly Requests</h2>
-            {monthlyData.length === 0 ? (
-              <p className="text-slate-400 text-center py-12 text-sm">No data</p>
-            ) : (
-              <ResponsiveContainer width="100%" height={240}>
-                <BarChart data={monthlyData}>
-                  <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-                  <YAxis tick={{ fontSize: 12 }} />
-                  <Tooltip />
-                  <Bar dataKey="requests" fill="#a855f7" radius={[6, 6, 0, 0]} name="Requests" />
-                </BarChart>
-              </ResponsiveContainer>
-            )}
-          </div>
-          <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
-            <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><Users size={20} /> Status Breakdown</h2>
-            {pieData.length === 0 ? (
-              <p className="text-slate-400 text-center py-12 text-sm">No data</p>
-            ) : (
-              <ResponsiveContainer width="100%" height={240}>
-                <PieChart>
-                  <Pie data={pieData} cx="50%" cy="50%" outerRadius={85} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}>
-                    {pieData.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            )}
-          </div>
-        </div>
-
-        {/* PENDING APPROVALS - Last 5 */}
+        {/* PENDING APPROVALS */}
         <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2"><Clock size={20} /> Pending Approvals</h2>

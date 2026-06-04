@@ -3,10 +3,6 @@ import {
     createAsyncThunk,
 } from "@reduxjs/toolkit";
 
-// ==========================================
-// LOGIN THUNK
-// ==========================================
-
 export const loginUser = createAsyncThunk(
 
     "auth/loginUser",
@@ -53,10 +49,6 @@ export const loginUser = createAsyncThunk(
     }
 );
 
-// ==========================================
-// INITIAL STATE
-// ==========================================
-
 const initialState = {
 
     user: JSON.parse(
@@ -74,10 +66,6 @@ const initialState = {
     error: null,
 };
 
-// ==========================================
-// AUTH SLICE
-// ==========================================
-
 const authSlice = createSlice({
 
     name: "auth",
@@ -85,10 +73,6 @@ const authSlice = createSlice({
     initialState,
 
     reducers: {
-
-        // ======================================
-        // LOGOUT
-        // ======================================
 
         logout: (state) => {
 
@@ -102,8 +86,6 @@ const authSlice = createSlice({
 
             state.error = null;
 
-            // CLEAR STORAGE
-
             localStorage.removeItem("token");
 
             localStorage.removeItem("role");
@@ -111,27 +93,15 @@ const authSlice = createSlice({
             localStorage.removeItem("user");
         },
 
-        // ======================================
-        // CLEAR ERROR
-        // ======================================
-
         clearAuthError: (state) => {
 
             state.error = null;
         },
     },
 
-    // ==========================================
-    // EXTRA REDUCERS
-    // ==========================================
-
     extraReducers: (builder) => {
 
         builder
-
-            // ==================================
-            // LOGIN PENDING
-            // ==================================
 
             .addCase(
                 loginUser.pending,
@@ -143,10 +113,6 @@ const authSlice = createSlice({
                     state.error = null;
                 }
             )
-
-            // ==================================
-            // LOGIN SUCCESS
-            // ==================================
 
             .addCase(
                 loginUser.fulfilled,
@@ -170,10 +136,6 @@ const authSlice = createSlice({
                             action.payload.name,
                     };
 
-                    // ==========================
-                    // SAVE TO LOCAL STORAGE
-                    // ==========================
-
                     localStorage.setItem(
                         "token",
                         action.payload.token
@@ -191,10 +153,6 @@ const authSlice = createSlice({
                 }
             )
 
-            // ==================================
-            // LOGIN FAILED
-            // ==================================
-
             .addCase(
                 loginUser.rejected,
 
@@ -208,10 +166,6 @@ const authSlice = createSlice({
     },
 });
 
-// ==========================================
-// EXPORT ACTIONS
-// ==========================================
-
 export const {
 
     logout,
@@ -219,9 +173,5 @@ export const {
     clearAuthError,
 
 } = authSlice.actions;
-
-// ==========================================
-// EXPORT REDUCER
-// ==========================================
 
 export default authSlice.reducer;

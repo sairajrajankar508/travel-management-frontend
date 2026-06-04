@@ -1,41 +1,20 @@
 import { Toaster } from "react-hot-toast";
 import { Routes, Route, Navigate } from "react-router-dom";
 
-// =======================================
-// AUTH
-// =======================================
-
 import LoginPage from "./pages/auth/LoginPage";
-
-// =======================================
-// LAYOUTS
-// =======================================
 
 import DashboardLayout from "./layouts/DashboardLayout";
 
-// =======================================
-// ROUTE PROTECTION
-// =======================================
-
 import ProtectedRoute from "./routes/ProtectedRoute";
-
-// =======================================
-// ADMIN PAGES
-// =======================================
 
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import UserManagement from "./pages/admin/UserManagement";
-import DepartmentManagement from "./pages/admin/DepartmentManagement";
 import PolicyManagement from "./pages/admin/PolicyManagement";
 import AdminTravelRequests from "./pages/admin/TravelRequests";
 import ApprovalMonitoring from "./pages/admin/ApprovalMonitoring";
 import Reports from "./pages/admin/Reports";
 import AuditLogs from "./pages/admin/AuditLogs";
 import AdminProfile from "./pages/admin/AdminProfile";
-
-// =======================================
-// EMPLOYEE PAGES
-// =======================================
 
 import EmployeeDashboard from "./pages/employee/EmployeeDashboard";
 import EmployeeTravelRequests from "./pages/employee/TravelRequests";
@@ -45,20 +24,12 @@ import EmployeeReimbursements from "./pages/employee/Reimbursements";
 import TravelHistory from "./pages/employee/TravelHistory";
 import EmployeeProfile from "./pages/employee/Profile";
 
-// =======================================
-// MANAGER PAGES
-// =======================================
-
 import ManagerDashboard from "./pages/manager/ManagerDashboard";
 import PendingApprovals from "./pages/manager/PendingApprovals";
 import TeamRequests from "./pages/manager/TeamRequests";
 import TeamHistory from "./pages/manager/TeamHistory";
 import ManagerReports from "./pages/manager/ManagerReports";
 import ManagerProfile from "./pages/manager/ManagerProfile";
-
-// =======================================
-// FINANCE PAGES
-// =======================================
 
 import FinanceDashboard from "./pages/finance/FinanceDashboard";
 import FinancePendingApprovals from "./pages/finance/PendingApprovals";
@@ -68,15 +39,11 @@ import FinanceTravelRequests from "./pages/finance/FinanceTravelRequests";
 import FinanceReports from "./pages/finance/FinanceReports";
 import FinanceProfile from "./pages/finance/FinanceProfile";
 
-// =======================================
-// COMMON PAGES
-// =======================================
-
 const Unauthorized = () => {
     return (
         <div className="flex items-center justify-center min-h-screen">
             <h1 className="text-3xl font-bold text-red-500">
-                Unauthorized Access 🚫
+                Unauthorized Access 
             </h1>
         </div>
     );
@@ -90,9 +57,6 @@ function App() {
 
         <Routes>
 
-            {/* ======================================= */}
-            {/* PUBLIC ROUTES */}
-            {/* ======================================= */}
 
             <Route
                 path="/login"
@@ -104,26 +68,17 @@ function App() {
                 element={<Unauthorized />}
             />
 
-            {/* ======================================= */}
-            {/* PROTECTED ROUTES */}
-            {/* ======================================= */}
 
             <Route element={<ProtectedRoute />}>
 
                 <Route element={<DashboardLayout />}>
 
-                    {/* ======================================= */}
-                    {/* ROOT REDIRECT */}
-                    {/* ======================================= */}
 
                     <Route
                         path="/"
                         element={<Navigate to="/login" replace />}
                     />
 
-                    {/* ======================================= */}
-                    {/* ADMIN ROUTES */}
-                    {/* ======================================= */}
 
                     <Route
                         element={
@@ -141,11 +96,6 @@ function App() {
                         <Route
                             path="/admin/users"
                             element={<UserManagement />}
-                        />
-
-                        <Route
-                            path="/admin/departments"
-                            element={<DepartmentManagement />}
                         />
 
                         <Route
@@ -180,9 +130,6 @@ function App() {
 
                     </Route>
 
-                    {/* ======================================= */}
-                    {/* EMPLOYEE ROUTES */}
-                    {/* ======================================= */}
 
                     <Route
                         element={
@@ -234,9 +181,6 @@ function App() {
 
                     </Route>
 
-                    {/* ======================================= */}
-                    {/* MANAGER ROUTES */}
-                    {/* ======================================= */}
 
                     <Route
                         element={
@@ -278,9 +222,6 @@ function App() {
 
                     </Route>
 
-                    {/* ======================================= */}
-                    {/* FINANCE ROUTES */}
-                    {/* ======================================= */}
 
                     <Route
                         element={
@@ -331,9 +272,6 @@ function App() {
 
             </Route>
 
-            {/* ======================================= */}
-            {/* 404 ROUTE */}
-            {/* ======================================= */}
 
             <Route
                 path="*"

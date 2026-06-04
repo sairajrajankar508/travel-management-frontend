@@ -1,18 +1,10 @@
 import { useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
 
-// ==========================================
-// SIDEBARS
-// ==========================================
-
 import AdminSidebar from "../components/layout/AdminSidebar";
 import EmployeeSidebar from "../components/layout/EmployeeSidebar";
 import ManagerSidebar from "../components/layout/ManagerSidebar";
 import FinanceSidebar from "../components/layout/FinanceSidebar";
-
-// ==========================================
-// NAVBAR
-// ==========================================
 
 import Navbar from "../components/layout/Navbar";
 
@@ -21,10 +13,6 @@ const DashboardLayout = () => {
     const { role } = useSelector(
         (state) => state.auth
     );
-
-    // ==========================================
-    // ROLE BASED SIDEBAR
-    // ==========================================
 
     const renderSidebar = () => {
 
@@ -55,9 +43,6 @@ const DashboardLayout = () => {
 
         <div className="flex h-screen bg-slate-100 overflow-hidden">
 
-            {/* ========================================== */}
-            {/* SIDEBAR */}
-            {/* ========================================== */}
 
             <aside className="shadow-lg border-r border-slate-200 hidden md:block">
 
@@ -65,25 +50,13 @@ const DashboardLayout = () => {
 
             </aside>
 
-            {/* ========================================== */}
-            {/* MAIN CONTENT */}
-            {/* ========================================== */}
-
             <div className="flex flex-col flex-1 overflow-hidden">
-
-                {/* ========================================== */}
-                {/* NAVBAR */}
-                {/* ========================================== */}
 
                 <div className="sticky top-0 z-50">
 
                     <Navbar />
 
                 </div>
-
-                {/* ========================================== */}
-                {/* PAGE CONTENT */}
-                {/* ========================================== */}
 
                 <main className="flex-1 overflow-y-auto p-6">
 

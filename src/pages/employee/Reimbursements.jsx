@@ -2,15 +2,12 @@ import { useState, useEffect } from "react";
 import apiClient from "../../services/apiClient";
 import toast from "react-hot-toast";
 import { DollarSign, CheckCircle, Clock, Search } from "lucide-react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 
 const STATUS_BADGE = {
   FINANCE_APPROVED: "bg-green-100 text-green-700",
   REIMBURSED: "bg-emerald-100 text-emerald-700",
   REJECTED: "bg-red-100 text-red-700",
 };
-
-const PIE_COLORS = ["#22c55e", "#10b981", "#ef4444", "#f59e0b"];
 
 const Reimbursements = () => {
   const [expenses, setExpenses] = useState([]);
@@ -44,25 +41,6 @@ const Reimbursements = () => {
     return matchSearch;
   }).sort((a, b) => (b.id || 0) - (a.id || 0));
 
-  // Charts
-  const statusCount = {};
-  expenses.forEach((e) => {
-    const s = e.status === "FINANCE_APPROVED" ? "Approved" : e.status === "REIMBURSED" ? "Reimbursed" : e.status === "REJECTED" ? "Rejected" : e.status;
-    statusCount[s] = (statusCount[s] || 0) + 1;
-  });
-  const pieData = Object.entries(statusCount).map(([name, value]) => ({ name, value }));
-
-  const monthlyMap = {};
-  expenses.forEach((e) => {
-    if (e.expenseDate) {
-      const m = new Date(e.expenseDate).toLocaleString("default", { month: "short", year: "2-digit" });
-      if (!monthlyMap[m]) monthlyMap[m] = { name: m, amount: 0, count: 0 };
-      monthlyMap[m].amount += e.amount || 0;
-      monthlyMap[m].count++;
-    }
-  });
-  const monthlyData = Object.values(monthlyMap).slice(-12);
-
   const totalApproved = expenses.filter((e) => e.status === "FINANCE_APPROVED" || e.status === "REIMBURSED").reduce((s, e) => s + (e.amount || 0), 0);
   const totalReimbursed = expenses.filter((e) => e.status === "REIMBURSED").reduce((s, e) => s + (e.amount || 0), 0);
   const pendingAmount = expenses.filter((e) => e.status === "FINANCE_APPROVED").reduce((s, e) => s + (e.amount || 0), 0);
@@ -77,7 +55,7 @@ const Reimbursements = () => {
           <h1 className="text-2xl font-bold text-slate-800">Reimbursements</h1>
         </div>
 
-        {/* SUMMARY CARDS */}
+       
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
             { label: "Approved Amount", value: `₹${totalApproved.toLocaleString()}`, color: "bg-green-100 text-green-600", icon: CheckCircle },
@@ -94,41 +72,7 @@ const Reimbursements = () => {
           ))}
         </div>
 
-        {/* CHARTS ROW */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-6">
-            <h2 className="text-lg font-bold text-slate-800 mb-4">Reimbursement Status</h2>
-            {pieData.length === 0 ? (
-              <p className="text-slate-400 text-center py-12">No data</p>
-            ) : (
-              <ResponsiveContainer width="100%" height={240}>
-                <PieChart>
-                  <Pie data={pieData} cx="50%" cy="50%" outerRadius={80} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}>
-                    {pieData.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            )}
-          </div>
-          <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-6">
-            <h2 className="text-lg font-bold text-slate-800 mb-4">Monthly Amount</h2>
-            {monthlyData.length === 0 ? (
-              <p className="text-slate-400 text-center py-12">No data</p>
-            ) : (
-              <ResponsiveContainer width="100%" height={240}>
-                <BarChart data={monthlyData}>
-                  <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-                  <YAxis tick={{ fontSize: 12 }} tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`} />
-                  <Tooltip formatter={(v) => `₹${v.toLocaleString()}`} />
-                  <Bar dataKey="amount" fill="#10b981" radius={[6, 6, 0, 0]} name="Amount" />
-                </BarChart>
-              </ResponsiveContainer>
-            )}
-          </div>
-        </div>
-
-        {/* EXPENSES TABLE */}
+       
         <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex gap-2">

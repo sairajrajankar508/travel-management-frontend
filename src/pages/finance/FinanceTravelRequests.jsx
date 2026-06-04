@@ -134,7 +134,7 @@ const FinanceTravelRequests = () => {
                 </div>
             </div>
 
-            {/* ITINERARY MODAL */}
+           
             {selectedReq && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={() => setSelectedReq(null)}>
                     <div className="bg-white rounded-3xl shadow-2xl p-6 w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>

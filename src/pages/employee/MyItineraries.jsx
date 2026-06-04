@@ -93,7 +93,7 @@ const MyItineraries = () => {
     <div className="min-h-screen bg-slate-100 p-6">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-        {/* LEFT — Approved Requests */}
+       
         <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6 lg:col-span-1">
           <div className="flex items-center gap-3 mb-4">
             <MapPinned className="text-2xl text-slate-700" />
@@ -114,7 +114,7 @@ const MyItineraries = () => {
           </div>
         </div>
 
-        {/* RIGHT — Itinerary Details */}
+       
         <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6 lg:col-span-2">
           {!selectedReq ? (
             <p className="text-slate-400 text-center py-12">Select a request to view itinerary</p>
@@ -146,7 +146,7 @@ const MyItineraries = () => {
                 </div>
               </div>
 
-              {/* TIMELINE */}
+             
               {sorted.length > 0 ? (
                 <div className="border-l-2 border-green-400 pl-5 space-y-6">
                   {sorted.map((entry) => (
@@ -182,7 +182,7 @@ const MyItineraries = () => {
         </div>
       </div>
 
-      {/* ADD ITINERARY MODAL */}
+      
       {showAdd && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={() => setShowAdd(false)}>
           <div className="bg-white rounded-3xl shadow-2xl p-6 w-full max-w-lg mx-4" onClick={(e) => e.stopPropagation()}>

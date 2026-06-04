@@ -43,7 +43,7 @@ const EmployeeProfile = () => {
   return (
     <div className="min-h-screen bg-slate-100 p-6">
       <div className="max-w-2xl mx-auto space-y-6">
-        {/* PROFILE CARD */}
+       
         <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
           <div className="flex items-center gap-4 mb-6">
             <div className="p-3 rounded-2xl bg-green-100">
@@ -72,7 +72,7 @@ const EmployeeProfile = () => {
           </div>
         </div>
 
-        {/* EDIT PROFILE */}
+       
         <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
           <h2 className="text-lg font-bold text-slate-800 mb-5 flex items-center gap-2"><User size={20} /> Edit Profile</h2>
           <div className="space-y-4">
@@ -89,7 +89,7 @@ const EmployeeProfile = () => {
           </div>
         </div>
 
-        {/* CHANGE PASSWORD */}
+        
         <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
           <h2 className="text-lg font-bold text-slate-800 mb-5 flex items-center gap-2"><Lock size={20} /> Change Password</h2>
           <div className="space-y-4">

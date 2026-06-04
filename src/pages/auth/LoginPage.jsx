@@ -41,10 +41,10 @@ const LoginPage = () => {
     return (
         <div className="min-h-screen bg-white flex">
 
-            {/* ─── LEFT: 60% — Brand / Info ─── */}
+            
             <div className="hidden lg:flex w-[60%] bg-linear-to-br from-slate-50 via-white to-slate-100 relative overflow-hidden flex-col justify-center px-16 py-12">
 
-                {/* subtle globe dots */}
+               
                 <div className="absolute inset-0 opacity-30"
                     style={{
                         backgroundImage: "radial-gradient(circle at 20px 20px, rgba(100,116,139,0.08) 1px, transparent 1px)",
@@ -52,13 +52,13 @@ const LoginPage = () => {
                     }}
                 />
 
-                {/* decorative circles */}
+                
                 <div className="absolute -top-32 -right-32 w-80 h-80 rounded-full bg-slate-100/50" />
                 <div className="absolute -bottom-20 -left-20 w-60 h-60 rounded-full bg-slate-200/40" />
 
                 <div className="relative z-10 max-w-lg">
 
-                    {/* brand */}
+                  
                     <div className="flex items-center gap-3 mb-12">
                         <div className="w-10 h-10 rounded-xl bg-linear-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-200">
                             <Globe className="text-white" size={22} />
@@ -69,7 +69,7 @@ const LoginPage = () => {
                         </div>
                     </div>
 
-                    {/* hero text */}
+                   
                     <h1 className="text-4xl font-bold text-slate-800 leading-tight mb-4">
                         Manage your<br />Travel Trips
                     </h1>
@@ -78,7 +78,7 @@ const LoginPage = () => {
                         in one place. Approvals, itineraries, expenses, and reports.
                     </p>
 
-                    {/* feature cards */}
+                    
                     <div className="grid grid-cols-3 gap-4">
                         {[
                             { icon: Plane, label: "Travel Requests", desc: "Submit & track" },
@@ -95,16 +95,16 @@ const LoginPage = () => {
                         ))}
                     </div>
 
-                    {/* footer */}
+                    
                     <p className="text-xs text-slate-300 mt-12">&copy; 2026 Corporate Travel Hub. All rights reserved.</p>
                 </div>
             </div>
 
-            {/* ─── RIGHT: 40% — Login Form ─── */}
+            
             <div className="w-full lg:w-[40%] min-h-screen flex items-center justify-center p-6 bg-slate-50 lg:bg-white">
                 <div className="w-full max-w-sm">
 
-                    {/* mobile brand */}
+                    
                     <div className="lg:hidden flex items-center gap-3 mb-10">
                         <div className="w-9 h-9 rounded-xl bg-linear-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-200">
                             <Globe className="text-white" size={20} />
@@ -115,11 +115,11 @@ const LoginPage = () => {
                         </div>
                     </div>
 
-                    {/* heading */}
+                    
                     <h2 className="text-2xl font-bold text-slate-800 mb-1">Welcome Back</h2>
                     <p className="text-sm text-slate-400 mb-8">Sign in to your account to continue</p>
 
-                    {/* form */}
+                   
                     <form onSubmit={handleLogin} className="space-y-4">
 
                         <div className="relative">
@@ -155,7 +155,7 @@ const LoginPage = () => {
                         </button>
                     </form>
 
-                    {/* role badges */}
+                    
                     <div className="mt-8 pt-6 border-t border-slate-100">
                         <p className="text-xs text-slate-400 text-center mb-3">Portal access for</p>
                         <div className="flex items-center justify-center gap-2 flex-wrap">

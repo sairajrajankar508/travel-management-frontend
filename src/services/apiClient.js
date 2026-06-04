@@ -1,16 +1,8 @@
 import axios from "axios";
 
-// ==========================================
-// BASE URL
-// ==========================================
-
 const BASE_URL =
     import.meta.env.VITE_API_BASE_URL ||
     "http://localhost:8080/api";
-
-// ==========================================
-// AXIOS INSTANCE
-// ==========================================
 
 const apiClient = axios.create({
 
@@ -22,11 +14,6 @@ const apiClient = axios.create({
 
     timeout: 15000,
 });
-
-// ==========================================
-// REQUEST INTERCEPTOR
-// ADD JWT TOKEN
-// ==========================================
 
 apiClient.interceptors.request.use(
 
@@ -48,20 +35,11 @@ apiClient.interceptors.request.use(
     }
 );
 
-// ==========================================
-// RESPONSE INTERCEPTOR
-// GLOBAL ERROR HANDLING
-// ==========================================
-
 apiClient.interceptors.response.use(
 
     (response) => response,
 
     (error) => {
-
-        // ==========================================
-        // NO INTERNET / SERVER DOWN
-        // ==========================================
 
         if (!error.response) {
 
@@ -76,17 +54,9 @@ apiClient.interceptors.response.use(
             return Promise.reject(error);
         }
 
-        // ==========================================
-        // STATUS CODES
-        // ==========================================
-
         const status = error.response.status;
 
         switch (status) {
-
-            // ======================================
-            // UNAUTHORIZED
-            // ======================================
 
             case 401:
 
@@ -97,10 +67,6 @@ apiClient.interceptors.response.use(
 
                 break;
 
-            // ======================================
-            // FORBIDDEN
-            // ======================================
-
             case 403:
 
                 alert(
@@ -108,10 +74,6 @@ apiClient.interceptors.response.use(
                 );
 
                 break;
-
-            // ======================================
-            // SERVER ERROR
-            // ======================================
 
             case 500:
 

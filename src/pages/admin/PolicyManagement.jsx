@@ -147,7 +147,7 @@ const PolicyManagement = () => {
         </div>
       </div>
 
-      {/* MODAL */}
+      
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={() => setShowModal(false)}>
           <div className="bg-white rounded-3xl shadow-2xl p-6 w-full max-w-lg mx-4" onClick={(e) => e.stopPropagation()}>

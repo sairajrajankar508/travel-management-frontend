@@ -14,10 +14,6 @@ const ProtectedRoute = ({ allowedRoles = [] }) => {
         (state) => state.auth
     );
 
-    // ======================================
-    // NOT LOGGED IN
-    // ======================================
-
     if (!token) {
 
         return (
@@ -27,10 +23,6 @@ const ProtectedRoute = ({ allowedRoles = [] }) => {
             />
         );
     }
-
-    // ======================================
-    // ROLE CHECK
-    // ======================================
 
     if (
 
@@ -47,10 +39,6 @@ const ProtectedRoute = ({ allowedRoles = [] }) => {
             />
         );
     }
-
-    // ======================================
-    // ACCESS GRANTED
-    // ======================================
 
     return <Outlet />;
 };

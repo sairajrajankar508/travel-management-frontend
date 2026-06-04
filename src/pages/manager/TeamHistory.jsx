@@ -2,9 +2,6 @@ import { useState, useEffect } from "react";
 import apiClient from "../../services/apiClient";
 import toast from "react-hot-toast";
 import { History, Search, Plane, DollarSign } from "lucide-react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
-
-const PIE_COLORS = ["#22c55e", "#14b8a6", "#3b82f6", "#f59e0b", "#ef4444", "#64748b"];
 
 const TeamHistory = () => {
   const [requests, setRequests] = useState([]);
@@ -27,26 +24,6 @@ const TeamHistory = () => {
     const q = search.toLowerCase();
     return (r.user?.name || "")?.toLowerCase().includes(q) || (r.destination || "")?.toLowerCase().includes(q);
   }).sort((a, b) => (b.id || 0) - (a.id || 0));
-
-  // Monthly bar chart
-  const monthlyMap = {};
-  requests.forEach((r) => {
-    if (r.createdAt) {
-      const m = new Date(r.createdAt).toLocaleString("default", { month: "short", year: "2-digit" });
-      if (!monthlyMap[m]) monthlyMap[m] = { name: m, trips: 0, budget: 0 };
-      monthlyMap[m].trips++;
-      monthlyMap[m].budget += r.budget || 0;
-    }
-  });
-  const monthlyData = Object.values(monthlyMap).slice(-12);
-
-  // Status pie
-  const statusCount = {};
-  requests.forEach((r) => {
-    const s = r.status === "COMPLETED" ? "Completed" : r.status === "REIMBURSED" ? "Reimbursed" : r.status === "CANCELLED" ? "Cancelled" : r.status === "REJECTED" ? "Rejected" : r.status === "MANAGER_APPROVED" ? "Approved" : r.status?.replace(/_/g, " ") || "Other";
-    statusCount[s] = (statusCount[s] || 0) + 1;
-  });
-  const pieData = Object.entries(statusCount).map(([name, value]) => ({ name, value }));
 
   if (loading) return <div className="min-h-screen bg-slate-100 flex items-center justify-center"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-purple-600" /></div>;
 
@@ -76,37 +53,7 @@ const TeamHistory = () => {
           ))}
         </div>
 
-        {/* CHARTS */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-6">
-            <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><Plane size={18} /> Trips per Month</h2>
-            {monthlyData.length === 0 ? <p className="text-slate-400 text-center py-12">No data</p> : (
-              <ResponsiveContainer width="100%" height={240}>
-                <BarChart data={monthlyData}>
-                  <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-                  <YAxis tick={{ fontSize: 12 }} />
-                  <Tooltip />
-                  <Bar dataKey="trips" fill="#a855f7" radius={[6, 6, 0, 0]} name="Trips" />
-                </BarChart>
-              </ResponsiveContainer>
-            )}
-          </div>
-          <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-6">
-            <h2 className="text-lg font-bold text-slate-800 mb-4">Request Outcomes</h2>
-            {pieData.length === 0 ? <p className="text-slate-400 text-center py-12">No data</p> : (
-              <ResponsiveContainer width="100%" height={240}>
-                <PieChart>
-                  <Pie data={pieData} cx="50%" cy="50%" outerRadius={80} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}>
-                    {pieData.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            )}
-          </div>
-        </div>
-
-        {/* TABLE */}
+       
         <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold text-slate-800">Travel Records</h2>

@@ -50,7 +50,7 @@ const AdminProfile = () => {
   return (
     <div className="min-h-screen bg-slate-100 p-6">
       <div className="max-w-2xl mx-auto space-y-6">
-        {/* PROFILE CARD */}
+       
         <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
           <div className="flex items-center gap-4 mb-6">
             <div className="p-3 rounded-2xl bg-blue-100">
@@ -83,7 +83,7 @@ const AdminProfile = () => {
           </div>
         </div>
 
-        {/* EDIT PROFILE */}
+       
         <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
           <h2 className="text-lg font-bold text-slate-800 mb-5 flex items-center gap-2">
             <UserCircle size={20} /> Edit Profile
@@ -104,7 +104,7 @@ const AdminProfile = () => {
           </div>
         </div>
 
-        {/* CHANGE PASSWORD */}
+        
         <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
           <h2 className="text-lg font-bold text-slate-800 mb-5 flex items-center gap-2">
             <Lock size={20} /> Change Password
@@ -123,7 +123,7 @@ const AdminProfile = () => {
           </div>
         </div>
 
-        {/* SAVE */}
+        
         <div className="flex justify-end">
           <button onClick={handleUpdate} className="px-8 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm flex items-center gap-2 transition">
             <Save size={17} /> Save Changes

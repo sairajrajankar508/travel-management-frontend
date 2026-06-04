@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import apiClient from "../../services/apiClient";
 import { FileBarChart2, TrendingUp, PieChart as PieChartIcon, Users } from "lucide-react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
-
-const PIE_COLORS = ["#f59e0b", "#22c55e", "#3b82f6", "#ef4444", "#a855f7", "#ec4899"];
 
 const FinanceReports = () => {
     const [deptData, setDeptData] = useState([]);
@@ -59,48 +56,7 @@ const FinanceReports = () => {
                     ))}
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-6">
-                        <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><Users size={18} /> Department Spending</h2>
-                        {deptData.length === 0 ? <p className="text-slate-400 text-center py-12">No data</p> : (
-                            <ResponsiveContainer width="100%" height={260}>
-                                <PieChart>
-                                    <Pie data={deptData} cx="50%" cy="50%" outerRadius={80} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}>
-                                        {deptData.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
-                                    </Pie>
-                                    <Tooltip formatter={(v) => `₹${v.toLocaleString()}`} />
-                                </PieChart>
-                            </ResponsiveContainer>
-                        )}
-                    </div>
-                    <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-6">
-                        <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><TrendingUp size={18} /> Monthly Budget vs Spend</h2>
-                        {monthlyData.length === 0 ? <p className="text-slate-400 text-center py-12">No data</p> : (
-                            <ResponsiveContainer width="100%" height={260}>
-                                <BarChart data={monthlyData}>
-                                    <XAxis dataKey="month" tick={{ fontSize: 12 }} />
-                                    <YAxis tick={{ fontSize: 12 }} tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`} />
-                                    <Tooltip formatter={(v) => `₹${v.toLocaleString()}`} />
-                                    <Bar dataKey="amount" fill="#22c55e" radius={[6, 6, 0, 0]} name="Amount" />
-                                </BarChart>
-                            </ResponsiveContainer>
-                        )}
-                    </div>
-                </div>
 
-                <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
-                    <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><PieChartIcon size={18} /> Expense Category Breakdown</h2>
-                    {categoryData.length === 0 ? <p className="text-slate-400 text-center py-12">No data</p> : (
-                        <ResponsiveContainer width="100%" height={260}>
-                            <PieChart>
-                                <Pie data={categoryData} cx="50%" cy="50%" outerRadius={90} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}>
-                                    {categoryData.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
-                                </Pie>
-                                <Tooltip formatter={(v) => `₹${v.toLocaleString()}`} />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    )}
-                </div>
             </div>
         </div>
     );

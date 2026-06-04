@@ -94,7 +94,7 @@ const PendingApprovals = () => {
                   </div>
                 </div>
 
-                {/* Comment + Actions */}
+               
                 <div className="mt-4 flex items-center gap-3">
                   <div className="relative flex-1">
                     <MessageSquare size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -118,7 +118,7 @@ const PendingApprovals = () => {
           </div>
         </div>
 
-        {/* VIEW DETAILS MODAL */}
+       
         {selectedReq && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={() => setSelectedReq(null)}>
             <div className="bg-white rounded-3xl shadow-2xl p-6 w-full max-w-lg mx-4" onClick={(e) => e.stopPropagation()}>
@@ -150,7 +150,7 @@ const PendingApprovals = () => {
                 )}
               </div>
 
-              {/* ITINERARY SECTION */}
+             
               <div className="mt-5 pt-4 border-t border-slate-200">
                 <h3 className="text-sm font-semibold text-slate-600 flex items-center gap-2 mb-3"><MapPinned size={15} /> Itinerary</h3>
                 {itinLoading ? (
